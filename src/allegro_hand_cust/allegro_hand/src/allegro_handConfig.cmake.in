@@ -1,0 +1,16 @@
+# - Config file for the allegro_hand package
+# It defines the following variables
+#  ALLEGRO_HAND_INCLUDE_DIRS - include directories for allegro_hand
+#  ALLEGRO_HAND_DEFINITIONS - definitions to use with the allegro_hand Lib
+#  ALLEGRO_HAND_LIBRARY    - library to link against allegro_hand Lib
+
+include(CMakeFindDependencyMacro)
+
+# Find dependencies
+find_package( Eigen3 REQUIRED )
+
+# Our library dependencies (contains definitions for IMPORTED targets)
+include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Targets.cmake")
+
+# These are IMPORTED targets created by @PROJECT_NAME@Targets.cmake
+set(allegro_hand_LIBRARIES @PROJECT_NAME@::@PROJECT_NAME@)

@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- <xacro:include filename="$(find my_dual_robot_cell_control)/urdf/ur_macro.xacro"/> -->
+  <xacro:include filename="$(find my_dual_robot_cell_control)/urdf/ur_macro_left.xacro"/> 
+  <xacro:include filename="$(find my_dual_robot_cell_control)/urdf/ur_macro_right.xacro"/>
+
+  <xacro:macro name="mesh_link" params="
+      name
+      visual_mesh
+      collision_mesh
+      xyz:='0 0 0'
+      rpy:='0 0 0'
+      scale:='1 1 1'
+      mass:='10.0'
+      ixx:='1.0' ixy:='0.0' ixz:='0.0' iyy:='1.0' iyz:='0.0' izz:='1.0'
+    ">
+
+    <link name="${name}">
+      <visual>
+        <origin xyz="${xyz}" rpy="${rpy}"/>
+        <geometry>
+          <mesh filename="${visual_mesh}" scale="${scale}"/>
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="${xyz}" rpy="${rpy}"/>
+        <geometry>
+          <mesh filename="${collision_mesh}" scale="${scale}"/>
+        </geometry>
+      </collision>
+
+      <!-- Recommended (helps Gazebo/physics; harmless for RViz/MoveIt) -->
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia ixx="${ixx}" ixy="${ixy}" ixz="${ixz}"
+                 iyy="${iyy}" iyz="${iyz}" izz="${izz}"/>
+      </inertial>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="my_dual_robot_cell" params="
+    parent
+    *origin
+
+    la_ur_type
+    la_joint_limits_parameters_file
+    la_kinematics_parameters_file
+    la_physical_parameters_file
+    la_visual_parameters_file
+
+    ra_ur_type
+    ra_joint_limits_parameters_file
+    ra_kinematics_parameters_file
+    ra_physical_parameters_file
+    ra_visual_parameters_file
+
+    table_visual_mesh:='package://my_dual_robot_cell_control/urdf/meshes/table/custom_table.dae'
+    table_collision_mesh:='package://my_dual_robot_cell_control/urdf/meshes/table/custom_table.stl'
+
+    stand_visual_mesh:='package://my_dual_robot_cell_control/urdf/meshes/stand/v1_files/tshape_stand_v1.dae'
+    stand_collision_mesh:='package://my_dual_robot_cell_control/urdf/meshes/stand/v1_files/tshape_stand_v1.stl'
+
+    table_scale:='1 1 1.06'
+    stand_scale:='1 1 1'
+
+    table_xyz:='0 0 0'
+    table_rpy:='0 0 0'
+    stand_xyz:='0 0 0'
+    stand_rpy:='0 0 0'
+    ">
+    
+    <joint name="table_base_joint" type="fixed">
+      <parent link="world" />
+      <child link="table" />
+    </joint>
+
+    <xacro:mesh_link
+      name="table"
+      visual_mesh="${table_visual_mesh}"
+      collision_mesh="${table_collision_mesh}"
+      xyz="0 0.40 0" 
+      rpy="0 0 0"
+      scale="${table_scale}"
+      mass="8.0"
+      ixx="1.0" iyy="1.0" izz="1.0"
+      ixy="0.0" ixz="0.0" iyz="0.0"
+    />
+
+    <joint name="ur_stand_joint" type="fixed">
+      <parent link="world"/>
+      <child link="ur_stand"/>
+      <origin xyz="${stand_xyz}" rpy="${stand_rpy}"/>
+    </joint>
+
+    <xacro:mesh_link
+      name="ur_stand"
+      visual_mesh="${stand_visual_mesh}"
+      collision_mesh="${stand_collision_mesh}"
+      xyz="0 -0.147 0"
+      rpy="0 0 0"
+      scale="${stand_scale}"
+      mass="20.0"
+      ixx="1.0" iyy="1.0" izz="1.0"
+      ixy="0.0" ixz="0.0" iyz="0.0"
+    />
+    
+    <!--Creates the mounts to attach the robots to the table-->
+    <link name="la_robot_mount"/>
+    <joint name="base_to_la_robot_mount" type="fixed">
+      <parent link="${parent}"/>
+      <child link="la_robot_mount"/>
+      <!-- position in tshape --> 
+      <!-- <origin xyz="-0.177 0 1.490" rpy="0 -2.3562 0" /> -->
+      <origin xyz="-0.177 0 1.490" rpy="2.526112945 -0.523598776 -2.186276035"/>
+    </joint>
+  
+    <link name="ra_robot_mount"/>
+    <joint name="base_to_ra_robot_mount" type="fixed">
+      <parent link="${parent}"/>
+      <child link="ra_robot_mount"/>
+      <!-- position in tshape -->
+      <!-- <origin xyz="0.177 0 1.490" rpy="0 2.3561 0" /> -->
+      <origin xyz="0.177 0 1.490" rpy="2.526112945 0.523598776 2.186276035"/>
+    </joint>
+
+    <!--Creates the 1st Robot-->
+    <xacro:la_robot
+      name="la"
+      tf_prefix="la_"
+      parent="la_robot_mount"
+      joint_limits_parameters_file="${la_joint_limits_parameters_file}"
+      kinematics_parameters_file="${la_kinematics_parameters_file}"
+      physical_parameters_file="${la_physical_parameters_file}"
+      visual_parameters_file="${la_visual_parameters_file}"
+    >
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:la_robot>
+  
+    <!--Creates the 2nd Robot-->
+    <xacro:ra_robot
+      name="ra"
+      tf_prefix="ra_"
+      parent="ra_robot_mount"
+      joint_limits_parameters_file="${ra_joint_limits_parameters_file}"
+      kinematics_parameters_file="${ra_kinematics_parameters_file}"
+      physical_parameters_file="${ra_physical_parameters_file}"
+      visual_parameters_file="${ra_visual_parameters_file}"
+    >
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:ra_robot>
+
+  </xacro:macro>
+</robot>

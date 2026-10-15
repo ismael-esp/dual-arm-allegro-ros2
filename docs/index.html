@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dual-Arm Allegro ROS 2</title>
+<meta name="description" content="ROS 2 Jazzy drivers for a bimanual UR3/UR3e torso with two Allegro Hand V4 and RealSense cameras: URDF, collision model, ros2_control, Docker.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f9f8f5; --surface:#ffffff; --ink:#1a1c20; --muted:#5b616c; --line:#e4e1da;
+  --accent:#2457d6; --accent-soft:#e6edfb; --warm:#d9640f; --code:#f2f0eb;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#101214; --surface:#171a1e; --ink:#e8e9eb; --muted:#9aa1ab; --line:#2a2e34;
+         --accent:#7aa2ff; --accent-soft:#18213a; --warm:#ff9a4d; --code:#1e2226; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{padding:60px 0 24px}
+.eyebrow{font:500 13px/1 "JetBrains Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:clamp(30px,5vw,48px);line-height:1.1;margin:14px 0;letter-spacing:-.02em}
+.lede{font-size:19px;color:var(--muted);max-width:800px;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.btn{display:inline-block;padding:10px 16px;border-radius:8px;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:500;background:var(--surface)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.hero{margin:10px 0 6px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#000}
+.hero video{display:block;width:100%;height:auto}
+.cap{font-size:14px;color:var(--muted);margin:8px 0 0}
+h2{font-size:25px;margin:60px 0 10px;letter-spacing:-.01em}
+h3{font-size:18px;margin:30px 0 8px}
+p{max-width:820px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:18px}
+.stat{background:var(--accent-soft);border-radius:10px;padding:14px 16px}
+.stat b{display:block;font-size:26px;letter-spacing:-.01em}
+.stat span{font-size:14px;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:16px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.step .n{font:500 12px "JetBrains Mono",monospace;color:var(--accent)}
+.step b{display:block;margin:2px 0 4px}
+.step span{color:var(--muted);font-size:14.5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:16px}
+.grid.small{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+figure img,figure video{display:block;width:100%;height:auto;background:#000}
+figcaption{padding:9px 12px;font-size:14px;color:var(--muted)}
+.tag{display:inline-block;font:500 11px "JetBrains Mono",monospace;padding:2px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);margin-right:6px}
+.tag.side{background:rgba(217,100,15,.12);color:var(--warm)}
+.plot{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;margin-top:14px}
+.plot img{display:block;width:100%}
+.tablewrap{overflow-x:auto;margin-top:14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:600;color:var(--muted);font-size:13px}
+tr:last-child td{border-bottom:0;font-weight:600}
+td.num{font-variant-numeric:tabular-nums}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;font:13.5px/1.55 "JetBrains Mono",monospace}
+code{font-family:"JetBrains Mono",monospace;font-size:.92em}
+footer{margin:64px 0 40px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">ROS 2 Jazzy · ros2_control · bimanual hardware</div>
+  <h1>Dual-Arm UR3 / UR3e + Allegro Hand Drivers</h1>
+  <p class="lede">The workspace that brings up a bimanual torso: two Universal Robots arms, two 16-DoF Allegro
+  Hand V4 over PCAN, three RealSense cameras, a calibrated URDF with collision geometry, and bridge nodes so any
+  program (a learned policy, a grasp planner, teleoperation) can drive the cell with joint-position topics.</p>
+  <div class="btns">
+    <a class="btn primary" href="https://github.com/ismael-esp/dual-arm-allegro-ros2">Code &amp; setup guide</a>
+    <a class="btn" href="https://ismael-esp.github.io/dexterous-pick-and-place/">Runs on it: dexterous pick-and-place</a>
+    <a class="btn" href="https://github.com/ismael-esp/foundationpose-ros2-tracker">Runs on it: 6D object tracking</a>
+  </div>
+</header>
+
+<div class="hero"><img src="media/real_vs_urdf_left_cam.png" alt="Real cell, URDF twin and overlay" style="display:block;width:100%"></div>
+<p class="cap">Left to right: the real cell, its URDF twin from the same calibrated camera pose, and the overlay (red = real table edge, cyan = twin).</p>
+
+<div class="stats">
+  <div class="stat"><b>2 arms</b><span>UR3 (right) + UR3e (left) in one ros2_control controller manager</span></div>
+  <div class="stat"><b>2 × 16 DoF</b><span>Allegro Hand V4, customised driver over PCAN-USB</span></div>
+  <div class="stat"><b>44 joints</b><span>merged into one <code>/joint_states</code> at 100 Hz</span></div>
+  <div class="stat"><b>3 cameras</b><span>RealSense D415 with calibrated intrinsics and extrinsics</span></div>
+</div>
+
+<h2>What one launch file brings up</h2>
+<div class="steps">
+  <div class="step"><span class="n">arms</span><b>UR driver + ros2_control</b><span>Both arms' hardware interfaces, forward-position / trajectory / velocity controllers, dashboard and safety stopper per arm.</span></div>
+  <div class="step"><span class="n">hands</span><b>Allegro V4 driver</b><span>PID joint-position control over CAN, with a PWM ceiling that keeps the thumb motor from overheating.</span></div>
+  <div class="step"><span class="n">cameras</span><b>RealSense, patched</b><span>Colour + depth per camera. Calibrated intrinsics load from YAML via <code>camera_info_url</code>, and extrinsics are published as static TFs to <code>world</code>.</span></div>
+  <div class="step"><span class="n">bridges</span><b>Topic-level control</b><span>Merged joint states, arm streaming with damping, and hand streaming that releases when its input topic goes silent.</span></div>
+</div>
+
+<h2>Robot description: visual and collision</h2>
+<p>The URDF is generated by xacro at launch: world, T-shaped stand and table, a UR3e and a UR3 with their factory
+kinematic calibrations, and an Allegro hand on each flange (prefixes <code>la_</code> / <code>ra_</code>). The same model
+is exported to Isaac Lab for sim-to-real work.</p>
+<div class="grid">
+  <figure><img src="media/urdf_visual_iso.png" alt="Visual model" loading="lazy"><figcaption>Visual meshes, home pose</figcaption></figure>
+  <figure><img src="media/urdf_collision_iso.png" alt="Collision model" loading="lazy"><figcaption>Collision geometry: right arm blue, left arm orange, stand and table grey</figcaption></figure>
+  <figure><img src="media/urdf_visual_front.png" alt="Visual model front" loading="lazy"><figcaption>Front view</figcaption></figure>
+  <figure><img src="media/urdf_collision_front.png" alt="Collision model front" loading="lazy"><figcaption>Front view, collision</figcaption></figure>
+</div>
+<div class="grid">
+  <figure><img src="media/cell_render.jpg" alt="Rendered digital twin" loading="lazy"><figcaption>The same cell rendered in Isaac Sim</figcaption></figure>
+  <figure><img src="media/real_vs_urdf_right_cam.png" alt="Right camera overlay" loading="lazy"><figcaption>Second camera: real, twin, overlay</figcaption></figure>
+</div>
+
+<h2>On the real robot</h2>
+<p>Pick-and-place over 10 objects, driven through these drivers (right arm + right Allegro), with FoundationPose
+perception and BODex grasp synthesis.</p>
+<div class="hero"><video src="https://ismael-esp.github.io/dexterous-pick-and-place/media/hardware/hw_highlights_10_objects.mp4" autoplay muted loop playsinline controls></video></div>
+<p class="cap">From <a href="https://ismael-esp.github.io/dexterous-pick-and-place/">dexterous-pick-and-place</a> (94/100 hardware trials), 3× speed.</p>
+
+<h2>Hardware</h2>
+<div class="tablewrap"><table>
+<tr><th>component</th><th>model</th><th>connection</th><th>prefix</th></tr>
+<tr><td>right arm</td><td>UR3</td><td>Ethernet 192.168.0.120, External Control</td><td><code>ra_</code></td></tr>
+<tr><td>left arm</td><td>UR3e</td><td>Ethernet 192.168.0.121, External Control</td><td><code>la_</code></td></tr>
+<tr><td>right hand</td><td>Allegro Hand V4 (P231)</td><td>PCAN-USB, channel 33</td><td><code>ra_</code></td></tr>
+<tr><td>left hand</td><td>Allegro Hand V4 (P249)</td><td>PCAN-USB, channel 32</td><td><code>la_</code></td></tr>
+<tr><td>cameras</td><td>RealSense D415 ×3</td><td>USB 3</td><td><code>front_right</code>, <code>extra</code>, <code>front_left</code></td></tr>
+</table></div>
+
+<h2>Try it</h2>
+<pre><code>git clone https://github.com/ismael-esp/dual-arm-allegro-ros2.git && cd dual-arm-allegro-ros2
+bash scripts/install_pcan_host.sh      # host: PEAK pcan kernel module
+bash docker/build.sh                   # ROS 2 Jazzy + ros2_control + UR + MoveIt + librealsense + PCAN libs
+bash docker/run.sh                     # repo mounted at /home/dev/ros2_ws
+bash scripts/setup_workspace.sh        # pinned upstream drivers + RealSense patch + colcon build
+source install/setup.bash
+ros2 launch my_dual_robot_cell_control start_system_drivers.launch.py      # real robot
+ros2 launch my_dual_robot_cell_control start_robots.launch.py \
+    la_use_mock_hardware:=true ra_use_mock_hardware:=true                  # no hardware</code></pre>
+<p>The README covers robot-side setup, commanding the cell, configuration, calibration and troubleshooting.</p>
+
+<footer>
+  Ismael Espinoza · built on the <a href="https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver">Universal Robots ROS 2 driver</a>,
+  the UPC/IOC Allegro Hand library, <a href="https://github.com/IntelRealSense/realsense-ros">realsense-ros</a> and
+  <a href="https://control.ros.org">ros2_control</a>.
+</footer>
+</div>
+</body>
+</html>

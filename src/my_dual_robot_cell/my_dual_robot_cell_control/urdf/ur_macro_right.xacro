@@ -1,0 +1,945 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:include filename="$(find ur_description)/urdf/inc/ur_common.xacro" />
+
+  <xacro:macro name="ra_robot" params="
+    name
+    tf_prefix
+    parent
+    *origin
+    joint_limits_parameters_file
+    kinematics_parameters_file
+    physical_parameters_file
+    visual_parameters_file
+    safety_limits:=false
+    safety_pos_margin:=0.15
+    safety_k_position:=20
+    force_abs_paths:=false
+    ">
+
+    <!-- Load configuration data from the provided .yaml files -->
+    <xacro:read_model_data
+      joint_limits_parameters_file="${joint_limits_parameters_file}"
+      kinematics_parameters_file="${kinematics_parameters_file}"
+      physical_parameters_file="${physical_parameters_file}"
+      visual_parameters_file="${visual_parameters_file}"
+      force_abs_paths="${force_abs_paths}"/>
+
+    <link name="${tf_prefix}base_link"/>
+    <link name="${tf_prefix}base_link_inertia">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
+        <geometry>
+          <xacro:get_mesh name="base" type="visual"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
+        <geometry>
+          <xacro:get_mesh name="base" type="collision"/>
+        </geometry>
+      </collision>
+      <xacro:cylinder_inertial radius="${base_inertia_radius}" length="${base_inertia_length}" mass="${base_mass}">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </xacro:cylinder_inertial>
+    </link>
+    <link name="${tf_prefix}shoulder_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
+        <geometry>
+          <xacro:get_mesh name="shoulder" type="visual"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
+        <geometry>
+          <xacro:get_mesh name="shoulder" type="collision"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${shoulder_mass}"/>
+        <origin rpy="${shoulder_inertia_rotation}" xyz="${shoulder_cog}"/>
+        <inertia
+            ixx="${shoulder_inertia_ixx}"
+            ixy="${shoulder_inertia_ixy}"
+            ixz="${shoulder_inertia_ixz}"
+            iyy="${shoulder_inertia_iyy}"
+            iyz="${shoulder_inertia_iyz}"
+            izz="${shoulder_inertia_izz}"
+        />
+      </inertial>    </link>
+    <link name="${tf_prefix}upper_arm_link">
+      <visual>
+        <origin xyz="0 0 ${shoulder_offset}" rpy="${pi/2} 0 ${-pi/2}"/>
+        <geometry>
+          <xacro:get_mesh name="upper_arm" type="visual"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${shoulder_offset}" rpy="${pi/2} 0 ${-pi/2}"/>
+        <geometry>
+          <xacro:get_mesh name="upper_arm" type="collision"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${upper_arm_mass}"/>
+        <origin rpy="${upper_arm_inertia_rotation}" xyz="${upper_arm_cog}"/>
+        <inertia
+            ixx="${upper_arm_inertia_ixx}"
+            ixy="${upper_arm_inertia_ixy}"
+            ixz="${upper_arm_inertia_ixz}"
+            iyy="${upper_arm_inertia_iyy}"
+            iyz="${upper_arm_inertia_iyz}"
+            izz="${upper_arm_inertia_izz}"
+        />
+      </inertial>
+    </link>
+    <link name="${tf_prefix}forearm_link">
+      <visual>
+        <origin xyz="0 0 ${elbow_offset}" rpy="${pi/2} 0 ${-pi/2}"/>
+        <geometry>
+          <xacro:get_mesh name="forearm" type="visual"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${elbow_offset}" rpy="${pi/2} 0 ${-pi/2}"/>
+        <geometry>
+          <xacro:get_mesh name="forearm" type="collision"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${forearm_mass}"/>
+        <origin rpy="${forearm_inertia_rotation}" xyz="${forearm_cog}"/>
+        <inertia
+            ixx="${forearm_inertia_ixx}"
+            ixy="${forearm_inertia_ixy}"
+            ixz="${forearm_inertia_ixz}"
+            iyy="${forearm_inertia_iyy}"
+            iyz="${forearm_inertia_iyz}"
+            izz="${forearm_inertia_izz}"
+        />
+      </inertial>
+    </link>
+    <link name="${tf_prefix}wrist_1_link">
+	  <xacro:get_visual_params name="wrist_1" type="visual_offset"/>
+      <visual>
+      	<origin xyz="0 0 ${visual_params}" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <xacro:get_mesh name="wrist_1" type="visual"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${visual_params}" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <xacro:get_mesh name="wrist_1" type="collision"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${wrist_1_mass}"/>
+        <origin rpy="${wrist_1_inertia_rotation}" xyz="${wrist_1_cog}"/>
+        <inertia
+            ixx="${wrist_1_inertia_ixx}"
+            ixy="${wrist_1_inertia_ixy}"
+            ixz="${wrist_1_inertia_ixz}"
+            iyy="${wrist_1_inertia_iyy}"
+            iyz="${wrist_1_inertia_iyz}"
+            izz="${wrist_1_inertia_izz}"
+        />
+      </inertial>
+    </link>
+    <link name="${tf_prefix}wrist_2_link">
+          <xacro:get_visual_params name="wrist_2" type="visual_offset"/>
+      <visual>
+        <origin xyz="0 0 ${visual_params}" rpy="0 0 0"/>
+        <geometry>
+          <xacro:get_mesh name="wrist_2" type="visual"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${visual_params}" rpy="0 0 0"/>
+        <geometry>
+          <xacro:get_mesh name="wrist_2" type="collision"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${wrist_2_mass}"/>
+        <origin rpy="${wrist_2_inertia_rotation}" xyz="${wrist_2_cog}"/>
+        <inertia
+            ixx="${wrist_2_inertia_ixx}"
+            ixy="${wrist_2_inertia_ixy}"
+            ixz="${wrist_2_inertia_ixz}"
+            iyy="${wrist_2_inertia_iyy}"
+            iyz="${wrist_2_inertia_iyz}"
+            izz="${wrist_2_inertia_izz}"
+        />
+      </inertial>
+    </link>
+    <link name="${tf_prefix}wrist_3_link">
+      <xacro:get_visual_params name="wrist_3" type="visual_offset_xyz"/>
+      <xacro:property name="mesh_offset" value="${visual_params}" scope="parent"/>
+
+      <xacro:if value="${visual_params == ''}">
+        <xacro:get_visual_params name="wrist_3" type="visual_offset"/>
+        <xacro:property name="mesh_offset" value="0 0 ${visual_params}" scope="parent"/>
+      </xacro:if>
+      <visual>
+        <origin xyz="${mesh_offset}" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <xacro:get_mesh name="wrist_3" type="visual"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="${mesh_offset}" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <xacro:get_mesh name="wrist_3" type="collision"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="${wrist_3_mass}"/>
+        <origin rpy="${wrist_3_inertia_rotation}" xyz="${wrist_3_cog}"/>
+        <inertia
+            ixx="${wrist_3_inertia_ixx}"
+            ixy="${wrist_3_inertia_ixy}"
+            ixz="${wrist_3_inertia_ixz}"
+            iyy="${wrist_3_inertia_iyy}"
+            iyz="${wrist_3_inertia_iyz}"
+            izz="${wrist_3_inertia_izz}"
+        />
+      </inertial>
+    </link>
+
+    <!-- base_joint fixes base_link to the environment -->
+    <joint name="${tf_prefix}base_joint" type="fixed">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent}" />
+      <child link="${tf_prefix}base_link" />
+    </joint>
+
+    <!-- joints - main serial chain -->
+    <joint name="${tf_prefix}base_link-base_link_inertia" type="fixed">
+      <parent link="${tf_prefix}base_link" />
+      <child link="${tf_prefix}base_link_inertia" />
+      <origin xyz="0 0 0" rpy="0 0 ${pi}" />
+    </joint>
+
+    <joint name="${tf_prefix}shoulder_pan_joint" type="revolute">
+      <parent link="${tf_prefix}base_link_inertia" />
+      <child link="${tf_prefix}shoulder_link" />
+      <origin xyz="${shoulder_x} ${shoulder_y} ${shoulder_z}" rpy="${shoulder_roll} ${shoulder_pitch} ${shoulder_yaw}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${shoulder_pan_lower_limit}" upper="${shoulder_pan_upper_limit}"
+        effort="${shoulder_pan_effort_limit}" velocity="${shoulder_pan_velocity_limit}"/>
+      <xacro:if value="${safety_limits}">
+         <safety_controller soft_lower_limit="${shoulder_pan_lower_limit + safety_pos_margin}" soft_upper_limit="${shoulder_pan_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+      </xacro:if>
+      <dynamics damping="0" friction="0"/>
+    </joint>
+
+    <joint name="${tf_prefix}shoulder_lift_joint" type="revolute">
+      <parent link="${tf_prefix}shoulder_link" />
+      <child link="${tf_prefix}upper_arm_link" />
+      <origin xyz="${upper_arm_x} ${upper_arm_y} ${upper_arm_z}" rpy="${upper_arm_roll} ${upper_arm_pitch} ${upper_arm_yaw}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${shoulder_lift_lower_limit}" upper="${shoulder_lift_upper_limit}"
+        effort="${shoulder_lift_effort_limit}" velocity="${shoulder_lift_velocity_limit}"/>
+      <xacro:if value="${safety_limits}">
+         <safety_controller soft_lower_limit="${shoulder_lift_lower_limit + safety_pos_margin}" soft_upper_limit="${shoulder_lift_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+      </xacro:if>
+      <dynamics damping="0" friction="0"/>
+    </joint>
+    
+    <joint name="${tf_prefix}elbow_joint" type="revolute">
+      <parent link="${tf_prefix}upper_arm_link" />
+      <child link="${tf_prefix}forearm_link" />
+      <origin xyz="${forearm_x} ${forearm_y} ${forearm_z}" rpy="${forearm_roll} ${forearm_pitch} ${forearm_yaw}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${elbow_joint_lower_limit}" upper="${elbow_joint_upper_limit}"
+        effort="${elbow_joint_effort_limit}" velocity="${elbow_joint_velocity_limit}"/>
+      <xacro:if value="${safety_limits}">
+         <safety_controller soft_lower_limit="${elbow_joint_lower_limit + safety_pos_margin}" soft_upper_limit="${elbow_joint_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+      </xacro:if>
+      <dynamics damping="0" friction="0"/>
+    </joint>
+    
+    <joint name="${tf_prefix}wrist_1_joint" type="revolute">
+      <parent link="${tf_prefix}forearm_link" />
+      <child link="${tf_prefix}wrist_1_link" />
+      <origin xyz="${wrist_1_x} ${wrist_1_y} ${wrist_1_z}" rpy="${wrist_1_roll} ${wrist_1_pitch} ${wrist_1_yaw}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${wrist_1_lower_limit}" upper="${wrist_1_upper_limit}"
+        effort="${wrist_1_effort_limit}" velocity="${wrist_1_velocity_limit}"/>
+      <xacro:if value="${safety_limits}">
+         <safety_controller soft_lower_limit="${wrist_1_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_1_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+      </xacro:if>
+      <dynamics damping="0" friction="0"/>
+    </joint>
+    
+    <joint name="${tf_prefix}wrist_2_joint" type="revolute">
+      <parent link="${tf_prefix}wrist_1_link" />
+      <child link="${tf_prefix}wrist_2_link" />
+      <origin xyz="${wrist_2_x} ${wrist_2_y} ${wrist_2_z}" rpy="${wrist_2_roll} ${wrist_2_pitch} ${wrist_2_yaw}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${wrist_2_lower_limit}" upper="${wrist_2_upper_limit}"
+             effort="${wrist_2_effort_limit}" velocity="${wrist_2_velocity_limit}"/>
+      <xacro:if value="${safety_limits}">
+         <safety_controller soft_lower_limit="${wrist_2_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_2_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+      </xacro:if>
+      <dynamics damping="0" friction="0"/>
+    </joint>
+    
+    <!-- <joint name="${tf_prefix}wrist_3_joint" type="${wrist_3_joint_type}"> -->
+    <joint name="${tf_prefix}wrist_3_joint" type="revolute">
+      <parent link="${tf_prefix}wrist_2_link" />
+      <child link="${tf_prefix}wrist_3_link" />
+      <origin xyz="${wrist_3_x} ${wrist_3_y} ${wrist_3_z}" rpy="${wrist_3_roll} ${wrist_3_pitch} ${wrist_3_yaw}" />
+      <axis xyz="0 0 1" />
+      <xacro:if value="${wrist_3_joint_type != 'continuous'}">
+        <limit lower="${wrist_3_lower_limit}" upper="${wrist_3_upper_limit}"
+          effort="${wrist_3_effort_limit}" velocity="${wrist_3_velocity_limit}"/>
+        <xacro:if value="${safety_limits}">
+          <safety_controller soft_lower_limit="${wrist_3_lower_limit + safety_pos_margin}" soft_upper_limit="${wrist_3_upper_limit - safety_pos_margin}" k_position="${safety_k_position}" k_velocity="0.0"/>
+        </xacro:if>
+      </xacro:if>
+      <xacro:unless value="${wrist_3_joint_type != 'continuous'}">
+        <limit effort="${wrist_3_effort_limit}" velocity="${wrist_3_velocity_limit}"/>
+        <xacro:if value="${safety_limits}">
+          <safety_controller k_position="${safety_k_position}" k_velocity="0.0"/>
+        </xacro:if>
+      </xacro:unless>
+      <dynamics damping="0" friction="0"/>
+    </joint>
+
+    <!-- <link name="${tf_prefix}ft_frame"/>
+    <joint name="${tf_prefix}wrist_3_link-ft_frame" type="fixed">
+      <parent link="${tf_prefix}wrist_3_link"/>
+      <child link="${tf_prefix}ft_frame"/>
+      <origin xyz="0 0 0" rpy="${pi} 0 0"/>
+    </joint> -->
+
+    <link name="${tf_prefix}base"/>
+    <joint name="${tf_prefix}base_link-base_fixed_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 ${pi}"/>
+      <parent link="${tf_prefix}base_link"/>
+      <child link="${tf_prefix}base"/>
+    </joint>
+
+    <link name="${tf_prefix}flange" />
+    <joint name="${tf_prefix}wrist_3-flange" type="fixed">
+      <parent link="${tf_prefix}wrist_3_link" />
+      <child link="${tf_prefix}flange" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <!-- End effector joint -->
+    <link name="${tf_prefix}ee_link" />
+    <joint name="${tf_prefix}ee_joint" type="fixed">
+      <parent link="${tf_prefix}flange" />
+      <child link="${tf_prefix}ee_link" />
+      <origin xyz="0 0.065 0.125" rpy="0 0 0" />
+    </joint>
+
+    <link name="${tf_prefix}tool0"/>
+    <joint name="${tf_prefix}flange-tool0" type="fixed">
+      <origin xyz="0 -0.045 0.07" rpy="${pi/2.0} 0 0"/>
+      <parent link="${tf_prefix}flange"/>
+      <child link="${tf_prefix}tool0"/>
+    </joint>
+
+    <joint name="${tf_prefix}allegro_mount" type="fixed">
+      <origin rpy="0 0 ${pi/2.0}" xyz="0 0.0095 0.095"/>
+      <!-- <origin rpy="0 ${pi/2.0} ${pi/2.0}" xyz="0 0.095 -0.0095"/> teleop in the center of wrist 3 -->
+      <!-- <origin rpy="0 -1.5707963267948966 3.14" xyz="0.095 -0.0015 0.0095"/> original before teleop-->
+      <parent link="${tf_prefix}flange"/>
+      <child link="${tf_prefix}palm_link"/>
+    </joint>
+
+    <!-- HAND AllEGRO -->
+    <!-- PALM -->
+    <link name="${tf_prefix}palm_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/base_link.STL" />
+        </geometry>`
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <material name="black">
+          <color rgba="0.2 0.2 0.2 1" />
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/allegro_slim/base_link.STL"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin rpy="0 0 0" xyz="0 0 0.0475" />
+        <mass value="0.4154" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+
+    <!-- [LINK 0, 4, 8] -->
+    <link name="${tf_prefix}link_0_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_0_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.0164" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.0082" />
+      </collision>
+      <inertial>
+        <mass value="0.0119" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_0_0" type="revolute">
+      <axis xyz="0 0 1" />
+      <limit effort="15" lower="-0.47" upper="0.47" velocity="7" />
+      <parent link="${tf_prefix}palm_link" />
+      <child link="${tf_prefix}link_0_0" />
+      <origin rpy="-0.08726646254999999 0 0" xyz="0 0.0435 0" />
+      <dynamics damping="3" friction="10" />
+    </joint>
+    <!-- [LINK 1, 5, 9] -->
+    <link name="${tf_prefix}link_1_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_1_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.054" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.027" />
+      </collision>
+      <inertial>
+        <mass value="0.065" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_1_0" type="revolute">
+      <limit effort="15" lower="-0.19599999999999998" upper="1.6099999999999999" velocity="7" />
+      <axis xyz="0 1 0" />
+      <parent link="${tf_prefix}link_0_0" />
+      <child link="${tf_prefix}link_1_0" />
+      <origin xyz="0 0 0.0164" />
+      <dynamics damping="3" friction="5" />
+    </joint>
+    <!-- [LINK 2, 6, 10]-->
+    <link name="${tf_prefix}link_2_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_2_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.0384" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.0192" />
+      </collision>
+      <inertial>
+        <mass value="0.0355" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_2_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="15" lower="-0.17400000000000002" upper="1.7089999999999999" velocity="7" />
+      <parent link="${tf_prefix}link_1_0" />
+      <child link="${tf_prefix}link_2_0" />
+      <origin xyz="0 0 0.054" />
+      <dynamics damping="8" friction="10" />
+    </joint>
+    <!-- [LINK 3, 7, 11] -->
+    <link name="${tf_prefix}link_3_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_3_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.026699999999999998" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.013349999999999999" />
+      </collision>
+      <inertial>
+        <mass value="0.0096" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_3_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="15" lower="-0.227" upper="1.6179999999999999" velocity="7" />
+      <parent link="${tf_prefix}link_2_0" />
+      <child link="${tf_prefix}link_3_0" />
+      <origin xyz="0 0 0.0384" />
+      <dynamics damping="10" friction="12" />
+    </joint>
+    <!-- [FINGER TIP] -->
+    <link name="${tf_prefix}link_3_0_tip">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_3_0_tip.STL" />
+        </geometry>
+        <material name="white">
+          <color rgba=".9 .9 .9 1" />
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <sphere radius="0.012" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+      </collision>
+      <inertial>
+        <mass value="0.0168" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_3_0_tip" type="fixed">
+      <parent link="${tf_prefix}link_3_0" />
+      <child link="${tf_prefix}link_3_0_tip" />
+      <origin rpy="0 0 0" xyz="0 0 0.026699999999999998" />
+    </joint>
+    <!-- [LINK 0, 4, 8] -->
+    <link name="${tf_prefix}link_4_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_0_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.0164" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.0082" />
+      </collision>
+      <inertial>
+        <mass value="0.0119" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_4_0" type="revolute">
+      <axis xyz="0 0 1" />
+      <limit effort="15" lower="-0.47" upper="0.47" velocity="7" />
+      <parent link="${tf_prefix}palm_link" />
+      <child link="${tf_prefix}link_4_0" />
+      <origin rpy="0.0 0 0" xyz="0 0 0" />
+      <dynamics damping="3" friction="10" />
+    </joint>
+    <!-- [LINK 1, 5, 9] -->
+    <link name="${tf_prefix}link_5_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_1_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.054" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.027" />
+      </collision>
+      <inertial>
+        <mass value="0.065" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_5_0" type="revolute">
+      <limit effort="15" lower="-0.19599999999999998" upper="1.6099999999999999" velocity="7" />
+      <axis xyz="0 1 0" />
+      <parent link="${tf_prefix}link_4_0" />
+      <child link="${tf_prefix}link_5_0" />
+      <origin xyz="0 0 0.0164" />
+      <dynamics damping="3" friction="5" />
+    </joint>
+    <!-- [LINK 2, 6, 10]-->
+    <link name="${tf_prefix}link_6_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_2_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.0384" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.0192" />
+      </collision>
+      <inertial>
+        <mass value="0.0355" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_6_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="15" lower="-0.17400000000000002" upper="1.7089999999999999" velocity="7" />
+      <parent link="${tf_prefix}link_5_0" />
+      <child link="${tf_prefix}link_6_0" />
+      <origin xyz="0 0 0.054" />
+      <dynamics damping="8" friction="10" />
+    </joint>
+    <!-- [LINK 3, 7, 11] -->
+    <link name="${tf_prefix}link_7_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_3_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.026699999999999998" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.013349999999999999" />
+      </collision>
+      <inertial>
+        <mass value="0.0096" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_7_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="15" lower="-0.227" upper="1.6179999999999999" velocity="7" />
+      <parent link="${tf_prefix}link_6_0" />
+      <child link="${tf_prefix}link_7_0" />
+      <origin xyz="0 0 0.0384" />
+      <dynamics damping="10" friction="12" />
+    </joint>
+    <!-- [FINGER TIP] -->
+    <link name="${tf_prefix}link_7_0_tip">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_3_0_tip.STL" />
+        </geometry>
+        <material name="white">
+          <color rgba=".9 .9 .9 1" />
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <sphere radius="0.012" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+      </collision>
+      <inertial>
+        <mass value="0.0168" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="9.68e-07" ixy="0" ixz="0" iyy="9.68e-07" iyz="0" izz="9.68e-07" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_7_0_tip" type="fixed">
+      <parent link="${tf_prefix}link_7_0" />
+      <child link="${tf_prefix}link_7_0_tip" />
+      <origin rpy="0 0 0" xyz="0 0 0.026699999999999998" />
+    </joint>
+    <!-- [LINK 0, 4, 8] -->
+    <link name="${tf_prefix}link_8_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_0_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.0164" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.0082" />
+      </collision>
+      <inertial>
+        <mass value="0.0119" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_8_0" type="revolute">
+      <axis xyz="0 0 1" />
+      <limit effort="15" lower="-0.47" upper="0.47" velocity="7" />
+      <parent link="${tf_prefix}palm_link" />
+      <child link="${tf_prefix}link_8_0" />
+      <origin rpy="0.08726646254999999 0 0" xyz="0 -0.0435 0" />
+      <dynamics damping="3" friction="10" />
+    </joint>
+    <!-- [LINK 1, 5, 9] -->
+    <link name="${tf_prefix}link_9_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_1_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.054" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.027" />
+      </collision>
+      <inertial>
+        <mass value="0.065" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_9_0" type="revolute">
+      <limit effort="15" lower="-0.19599999999999998" upper="1.6099999999999999" velocity="7" />
+      <axis xyz="0 1 0" />
+      <parent link="${tf_prefix}link_8_0" />
+      <child link="${tf_prefix}link_9_0" />
+      <origin xyz="0 0 0.0164" />
+      <dynamics damping="3" friction="5" />
+    </joint>
+    <!-- [LINK 2, 6, 10]-->
+    <link name="${tf_prefix}link_10_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_2_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.0384" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.0192" />
+      </collision>
+      <inertial>
+        <mass value="0.0355" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_10_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="15" lower="-0.17400000000000002" upper="1.7089999999999999" velocity="7" />
+      <parent link="${tf_prefix}link_9_0" />
+      <child link="${tf_prefix}link_10_0" />
+      <origin xyz="0 0 0.054" />
+      <dynamics damping="8" friction="10" />
+    </joint>
+    <!-- [LINK 3, 7, 11] -->
+    <link name="${tf_prefix}link_11_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_3_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.026699999999999998" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.013349999999999999" />
+      </collision>
+      <inertial>
+        <mass value="0.0096" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_11_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="15" lower="-0.227" upper="1.6179999999999999" velocity="7" />
+      <parent link="${tf_prefix}link_10_0" />
+      <child link="${tf_prefix}link_11_0" />
+      <origin xyz="0 0 0.0384" />
+      <dynamics damping="10" friction="12" />
+    </joint>
+    <!-- [FINGER TIP] -->
+    <link name="${tf_prefix}link_11_0_tip">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_3_0_tip.STL" />
+        </geometry>
+        <material name="white">
+          <color rgba=".9 .9 .9 1" />
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <sphere radius="0.012" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+      </collision>
+      <inertial>
+        <mass value="0.0168" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="9.68e-07" ixy="0" ixz="0" iyy="9.68e-07" iyz="0" izz="9.68e-07" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_11_0_tip" type="fixed">
+      <parent link="${tf_prefix}link_11_0" />
+      <child link="${tf_prefix}link_11_0_tip" />
+      <origin rpy="0 0 0" xyz="0 0 0.026699999999999998" />
+    </joint>
+    <!-- [LINK 12] -->
+    <link name="${tf_prefix}link_12_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_12_0_right.STL" />
+        </geometry>
+        <material name="black">
+          <color rgba=".2 .2 .2 1" />
+        </material>
+        <origin rpy="0.01745329251 0 0" xyz="0 0 0" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0358 0.034 0.0455" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="-0.0179 0.017 0.02275" />
+      </collision>
+      <inertial>
+        <mass value="0.0176" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_12_0" type="revolute">
+      <axis xyz="-1 0 0" />
+      <limit effort="15" lower="0.263" upper="1.396" velocity="7" />
+      <parent link="${tf_prefix}palm_link" />
+      <child link="${tf_prefix}link_12_0" />
+      <origin rpy="0 -1.6580627884499999 -1.5707963259" xyz="-0.0182 0.019333 -0.045987" />
+      <dynamics damping="3" friction="10" />
+    </joint>
+    <!-- [LINK 13] -->
+    <link name="${tf_prefix}link_13_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_13_0.STL" />
+        </geometry>
+        <material name="black">
+          <color rgba=".2 .2 .2 1" />
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.0177" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.00885" />
+      </collision>
+      <inertial>
+        <mass value="0.0119" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_13_0" type="revolute">
+      <axis xyz="0 0 1" />
+      <limit effort="15" lower="-0.10499999999999998" upper="1.1629999999999998" velocity="7" />
+      <parent link="${tf_prefix}link_12_0" />
+      <child link="${tf_prefix}link_13_0" />
+      <origin xyz="-0.027 0.005 0.0399" />
+      <dynamics damping="3" friction="5" />
+    </joint>
+    <!-- [LINK 14] -->
+    <link name="${tf_prefix}link_14_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_14_0.STL" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.0514" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.0257" />
+      </collision>
+      <inertial>
+        <mass value="0.038" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_14_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="15" lower="-0.18899999999999997" upper="1.644" velocity="7" />
+      <parent link="${tf_prefix}link_13_0" />
+      <child link="${tf_prefix}link_14_0" />
+      <origin xyz="0 0 0.0177" />
+      <dynamics damping="3" friction="10" />
+    </joint>
+    <!-- [LINK 15] -->
+    <link name="${tf_prefix}link_15_0">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_15_0.STL" />
+        </geometry>
+        <material name="black">
+          <color rgba=".2 .2 .2 1" />
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.0196 0.0275 0.042300000000000004" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0.021150000000000002" />
+      </collision>
+      <inertial>
+        <mass value="0.0388" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="1e-4" ixy="0.0" ixz="0.0" iyy="1e-4" iyz="0.0" izz="1e-4" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_15_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="15" lower="-0.162" upper="1.7189999999999999" velocity="7" />
+      <parent link="${tf_prefix}link_14_0" />
+      <child link="${tf_prefix}link_15_0" />
+      <origin xyz="0 0 0.0514" />
+      <dynamics damping="3" friction="12" />
+    </joint>
+    <!-- [FINGER TIP] -->
+    <link name="${tf_prefix}link_15_0_tip">
+      <visual>
+        <geometry>
+          <mesh filename="package://my_dual_robot_cell_control/urdf/meshes/link_15_0_tip.STL" />
+        </geometry>
+        <material name="white">
+          <color rgba=".9 .9 .9 1" />
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <sphere radius="0.012" />
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0" />
+      </collision>
+      <inertial>
+        <mass value="0.0168" />
+        <origin rpy="0 0 0" xyz="0 0 0" />
+        <inertia ixx="9.68e-07" ixy="0" ixz="0" iyy="9.68e-07" iyz="0" izz="9.68e-07" />
+      </inertial>
+    </link>
+    <joint name="${tf_prefix}joint_15_0_tip" type="fixed">
+      <parent link="${tf_prefix}link_15_0" />
+      <child link="${tf_prefix}link_15_0_tip" />
+      <origin rpy="0 0 0" xyz="0 0 0.026699999999999998" />
+    </joint>
+
+  </xacro:macro>
+</robot>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>allegro_hand</name>
+  <version>0.0.1</version>
+  <description>Allegro hand driver and lib. ROS 1/2 skin</description>
+
+  <maintainer email="leopold.palomo@upc.edu">Leopold Palomo-Avellaneda</maintainer>
+  <author email="andres.montano@upc.edu"> Andres Montaño</author>
+  <author email="marina.pujol.closa@estudiantat.upc.edu">Marina Pujol Closa</author>
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>LGPLv3</license>
+
+  <buildtool_depend>cmake</buildtool_depend>
+  <export>
+      <!-- Other tools can request additional information be placed here -->
+      <build_type>cmake</build_type>
+  </export>
+</package>

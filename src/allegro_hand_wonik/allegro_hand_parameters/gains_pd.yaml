@@ -1,0 +1,42 @@
+# Gains for the Proportional-Derivative Joint Space Controller
+# Optimized for Allegro Hand v4 (Humble/ROS2)
+# Ensure you launch the hand with CONTROLLER:=pd to use this file.
+
+gains_pd:
+  # Proportional Gains (High enough to fight gravity, low enough to avoid oscillation)
+  p:
+    j00: 600.0
+    j01: 800.0
+    j02: 900.0
+    j03: 700.0
+    j10: 600.0
+    j11: 800.0
+    j12: 900.0
+    j13: 700.0
+    j20: 600.0
+    j21: 800.0
+    j22: 900.0
+    j23: 700.0
+    j30: 1000.0  # Thumb Roll (The joint failing in your tests)
+    j31: 1000.0  # Thumb Proximal
+    j32: 1000.0  # Thumb Distal
+    j33: 800.0   # Thumb Tip
+
+  # Derivative Gains (Crucial for damping and "holding" strength)
+  d:
+    j00: 15.0
+    j01: 20.0
+    j02: 25.0
+    j03: 15.0
+    j10: 15.0
+    j11: 20.0
+    j12: 25.0
+    j13: 15.0
+    j20: 15.0
+    j21: 20.0
+    j22: 25.0
+    j23: 15.0
+    j30: 30.0   # Higher damping for the thumb to stop the "tilted" failure
+    j31: 30.0
+    j32: 30.0
+    j33: 20.0

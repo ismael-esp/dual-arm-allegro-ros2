@@ -1,0 +1,6 @@
+*.*user*
+build*/
+sobras*/
+CMakeLists.txt.*
+*.pro.*
+*.autosave

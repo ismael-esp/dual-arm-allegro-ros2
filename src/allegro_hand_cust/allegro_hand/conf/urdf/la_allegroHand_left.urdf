@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="la_allegro_hand_left">
+   <!-- Base -->
+   <link name="la_base_link">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/base_link_left.STL" />
+         </geometry>
+         <origin rpy="-1.5707963259 0 0" xyz="0 0 0 " />
+         <material name="black">
+            <color rgba="0.2 0.2 0.2 1" />
+         </material>
+      </visual>
+      <collision>
+         <origin rpy="0 0 0" xyz="-0.009300 0 -0.0475" />
+         <geometry>
+            <box size="0.0408 0.1130 0.095" />
+         </geometry>
+      </collision>
+   </link>
+   <!-- Index -->
+   <link name="la_link_0_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_0.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.0164" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.0082" />
+      </collision>
+      <inertial>
+         <mass value="0.0119" />
+         <origin xyz="0.012303 -0.012311 0" />
+         <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_0_0" type="revolute">
+      <axis xyz="0 0 1" />
+      <limit effort="0.7" lower="-0.5969322452" upper="0.588070723111615" velocity="3" />
+      <parent link="la_base_link" />
+      <child link="la_link_0_0" />
+      <origin rpy="0.08726646255 0 0" xyz="0 -0.0435 -0.001542" />
+      <dynamics damping="0.021307336803783977" friction="0.06754533316058077" />
+   </joint>
+   <link name="la_link_1_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_1.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.054" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.027" />
+      </collision>
+      <inertial>
+         <mass value="0.065" />
+		 <origin xyz="0.010769 -0.004809 0.026154" />
+		 <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_1_0" type="revolute">
+      <limit effort="0.7" lower="-0.284219635541756" upper="1.79806052068398" velocity="3" />
+      <axis xyz="0 1 0" />
+      <parent link="la_link_0_0" />
+      <child link="la_link_1_0" />
+      <origin xyz="0 0 0.0164" />
+      <dynamics damping="0.01767730238754802" friction="0.046834261267951538" />
+   </joint>
+   <link name="la_link_2_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_2.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.0384" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.0192" />
+      </collision>
+      <inertial>
+			<mass value="0.037009160547828809" />
+			<origin xyz="0.010528 -0.010246 0.037828" />
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_2_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="0.7" lower="-0.277444047727987" upper="1.77295534050938" velocity="3" />
+      <parent link="la_link_1_0" />
+      <child link="la_link_2_0" />
+      <origin xyz="0 0 0.054" />
+      <dynamics damping="0.031774638864325758" friction="0.016627969777092133" />
+   </joint>
+   <link name="la_link_3_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_3.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.0267" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.01335" />
+      </collision>
+      <inertial>
+			<mass value="0.031366974030183042" />
+			<origin xyz="0.012497 -0.019128 0.058662" />
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_3_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="0.7" lower="-0.282000556563447" upper="1.76086875700753" velocity="3" />
+      <parent link="la_link_2_0" />
+      <child link="la_link_3_0" />
+      <origin xyz="0 0 0.0384" />
+      <dynamics damping="0.038319998323206518" friction="0.021242402695969654" />
+   </joint>
+   <link name="la_link_3_0_tip">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/sensing_tip.stl" scale="0.001 0.001 0.001" />
+         </geometry>
+		 <origin rpy="1.5707963259 0 1.5707963259" xyz="-0.0095 0 0" />
+         <material name="white">
+            <color rgba=".9 .9 .9 1" />
+         </material>
+      </visual>
+      <collision>
+         <geometry>
+            <sphere radius="0.012" />
+         </geometry>
+      </collision>
+      <inertial>
+         <mass value="0.0168" />
+         <origin xyz="0 0 0" rpy="0 0 0" />
+         <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_3_0_tip" type="fixed">
+      <parent link="la_link_3_0" />
+      <child link="la_link_3_0_tip" />
+      <origin rpy="0 0 0" xyz="0.01335 0 0.0408" />
+   </joint>
+   <!-- Middle -->
+   <link name="la_link_4_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_0.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.0164" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.0082" />
+      </collision>
+      <inertial>
+         <mass value="0.0119" />
+         <origin xyz="0.012303 -0.012311 0" />
+         <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_4_0" type="revolute">
+      <axis xyz="0 0 1" />
+      <limit effort="0.7" lower="-0.596932245164993" upper="0.588070723111615" velocity="3" />
+      <parent link="la_base_link" />
+      <child link="la_link_4_0" />
+      <origin rpy="0.0 0 0" xyz="0 0 0.0007" />
+      <dynamics damping="0.03919965995816594" friction="0.039832089332686435" />
+   </joint>
+    <link name="la_link_5_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_1.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.054" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.027" />
+      </collision>
+      <inertial>
+         <mass value="0.065" />
+		 <origin xyz="0.010769 -0.004809 0.026154" />
+		 <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_5_0" type="revolute">
+      <limit effort="0.7" lower="-0.284219635541756" upper="1.79806052068398" velocity="3" />
+      <axis xyz="0 1 0" />
+      <parent link="la_link_4_0" />
+      <child link="la_link_5_0" />
+      <origin xyz="0 0 0.0164" />
+      <dynamics damping="0.03873626118353872" friction="0.054137945660864321" />
+   </joint>
+   <link name="la_link_6_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_2.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.0384" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.0192" />
+      </collision>
+      <inertial>
+			<mass value="0.037009160547828809" />
+			<origin xyz="0.010528 -0.010246 0.037828" />
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_6_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="0.7" lower="-0.277444047727987" upper="1.77295534050938" velocity="3" />
+      <parent link="la_link_5_0" />
+      <child link="la_link_6_0" />
+      <origin xyz="0 0 0.054" />
+      <dynamics damping="0.038096107794554551" friction="0.016501055223839444" />
+   </joint>
+   <link name="la_link_7_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_3.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.0267" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.01335" />
+      </collision>
+      <inertial>
+			<mass value="0.031366974030183042" />
+			<origin xyz="0.012497 -0.019128 0.058662" />
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_7_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="0.7" lower="-0.282000556563447" upper="1.76086875700753" velocity="3" />
+      <parent link="la_link_6_0" />
+      <child link="la_link_7_0" />
+      <origin xyz="0 0 0.0384" />
+      <dynamics damping="0.030909594496839752" friction="0.018861768610753726" />
+   </joint>
+   <link name="la_link_7_0_tip">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/sensing_tip.stl" scale="0.001 0.001 0.001" />
+         </geometry>
+		 <origin rpy="1.5707963259 0 1.5707963259" xyz="-0.0095 0 0" />
+         <material name="white">
+            <color rgba=".9 .9 .9 1" />
+         </material>
+      </visual>
+      <collision>
+         <geometry>
+            <sphere radius="0.012" />
+         </geometry>
+      </collision>
+      <inertial>
+         <mass value="0.0168" />
+         <origin xyz="0 0 0" rpy="0 0 0" />
+         <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_7_0_tip" type="fixed">
+      <parent link="la_link_7_0" />
+      <child link="la_link_7_0_tip" />
+      <origin rpy="0 0 0" xyz="0.01335 0 0.0408" />
+   </joint>
+   <!-- Ring -->
+   <link name="la_link_8_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_0.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.0164" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.0082" />
+      </collision>
+      <inertial>
+         <mass value="0.0119" />
+         <origin xyz="0.012303 -0.012311 0" />
+         <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_8_0" type="revolute">
+      <axis xyz="0 0 1" />
+      <limit effort="0.7" lower="-0.596932245164993" upper="0.588070723111615" velocity="3" />
+      <parent link="la_base_link" />
+      <child link="la_link_8_0" />
+      <origin rpy="-0.08726646255 0 0" xyz="0 0.0435 -0.001542" />
+      <dynamics damping="0.021307336803783977" friction="0.06754533316058077" />
+   </joint>
+   <link name="la_link_9_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_1.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.054" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.027" />
+      </collision>
+      <inertial>
+         <mass value="0.065" />
+		 <origin xyz="0.010769 -0.004809 0.026154" />
+		 <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_9_0" type="revolute">
+      <limit effort="0.7" lower="-0.284219635541756" upper="1.79806052068398" velocity="3" />
+      <axis xyz="0 1 0" />
+      <parent link="la_link_8_0" />
+      <child link="la_link_9_0" />
+      <origin xyz="0 0 0.0164" />
+      <dynamics damping="0.01767730238754802" friction="0.046834261267951538" />
+   </joint>
+   <link name="la_link_10_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_2.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.0384" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.0192" />
+      </collision>
+      <inertial>
+         	<mass value="0.037009160547828809" />
+			<origin xyz="0.010528 -0.010246 0.037828" />
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_10_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="0.7" lower="-0.277444047727987" upper="1.77295534050938" velocity="3" />
+      <parent link="la_link_9_0" />
+      <child link="la_link_10_0" />
+      <origin xyz="0 0 0.054" />
+      <dynamics damping="0.031774638864325758" friction="0.016627969777092133" />
+   </joint>
+   <link name="la_link_11_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_3.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.0267" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.01335" />
+      </collision>
+      <inertial>
+			<mass value="0.031366974030183042" />
+			<origin xyz="0.012497 -0.019128 0.058662" />
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_11_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="0.7" lower="-0.282000556563447" upper="1.76086875700753" velocity="3" />
+      <parent link="la_link_10_0" />
+      <child link="la_link_11_0" />
+      <origin xyz="0 0 0.0384" />
+      <dynamics damping="0.038319998323206518" friction="0.021242402695969654" />
+   </joint>
+   <link name="la_link_11_0_tip">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/sensing_tip.stl" scale="0.001 0.001 0.001" />
+         </geometry>
+		 <origin rpy="1.5707963259 0 1.5707963259" xyz="-0.0095 0 0" />
+         <material name="white">
+            <color rgba=".9 .9 .9 1" />
+         </material>
+      </visual>
+      <collision>
+         <geometry>
+            <sphere radius="0.012" />
+         </geometry>
+      </collision>
+      <inertial>
+         <mass value="0.0168" />
+         <origin xyz="0 0 0" rpy="0 0 0" />
+         <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_11_0_tip" type="fixed">
+      <parent link="la_link_11_0" />
+      <child link="la_link_11_0_tip" />
+      <origin rpy="0 0 0" xyz="0.01335 0 0.0408" />
+   </joint>
+   <!-- Thumb -->
+   <link name="la_link_12_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_12.0_left.STL" />
+         </geometry>
+         <material name="black">
+            <color rgba=".2 .2 .2 1" />
+         </material>
+         <origin rpy="3.1415926518 0 0" xyz="0 0 0" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0358 0.034 0.0455" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="-0.0179 -0.009 0.0145" />
+      </collision>
+      <inertial>
+         <mass value="0.060" />
+         <origin xyz="0. -0.054 0.27" />
+         <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_12_0" type="revolute">
+      <axis xyz="+1 0 0" />
+      <limit effort="0.7" lower="0.218668042522522" upper="1.53293975821553" velocity="3" />
+      <parent link="la_base_link" />
+      <child link="la_link_12_0" />
+      <origin rpy="0 -1.65806278845 1.5707963259" xyz="-0.0182 -0.019333 -0.045987" />
+      <dynamics damping="0.021307336803783977" friction="0.06754533316058077" />
+   </joint>
+   <link name="la_link_13_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_13.0.STL" />
+         </geometry>
+         <material name="black">
+            <color rgba=".2 .2 .2 1" />
+         </material>
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.0177" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.00885" />
+      </collision>
+      <inertial>
+         <mass value="0.0119" />
+         <origin xyz="0.012303 -0.012497 0" />
+         <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_13_0" type="revolute">
+      <axis xyz="0 0 -1" />
+      <limit effort="0.7" lower="-0.396993229219395" upper="1.20296271414105" velocity="3" />
+      <parent link="la_link_12_0" />
+      <child link="la_link_13_0" />
+      <origin xyz="-0.027 -0.005 0.0399" />
+      <dynamics damping="0.01767730238754802" friction="0.046834261267951538" />
+   </joint>
+   <link name="la_link_14_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_14.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.0514" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.0257" />
+      </collision>
+      <inertial>
+         <mass value="0.058" />
+		 <origin xyz="0.010528 -0.010246 0.037828" />
+		 <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_14_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="0.7" lower="-0.251244121924091" upper="1.76700820884751" velocity="3" />
+      <parent link="la_link_13_0" />
+      <child link="la_link_14_0" />
+      <origin xyz="0 0 0.0177" />
+      <dynamics damping="0.031774638864325758" friction="0.016627969777092133" />
+   </joint>
+   <link name="la_link_15_0">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/link_15.0.STL" />
+         </geometry>
+         <material name="black" />
+      </visual>
+      <collision>
+         <geometry>
+            <box size="0.0196 0.0275 0.0423" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0.02115" />
+      </collision>
+      <inertial>
+			<mass value="0.080" />
+			<origin xyz="0.012497 -0.019128 0.058662" />
+			<inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_15_0" type="revolute">
+      <axis xyz="0 1 0" />
+      <limit effort="0.7" lower="-0.260209200996458" upper="1.82261832804392" velocity="3" />
+      <parent link="la_link_14_0" />
+      <child link="la_link_15_0" />
+      <origin xyz="0 0 0.0514" />
+      <dynamics damping="0.038319998323206518" friction="0.021242402695969654" />
+   </joint>
+   <link name="la_link_15_0_tip">
+      <visual>
+         <geometry>
+            <mesh filename="package://allegro_hand/conf/urdf/meshes/sensing_tip.stl" scale="0.001 0.001 0.001" />
+         </geometry>
+		 <origin rpy="1.5707963259 0 1.5707963259" xyz="-0.0095 0 0" />
+         <material name="white">
+            <color rgba=".9 .9 .9 1" />
+         </material>
+      </visual>
+      <collision>
+         <geometry>
+            <sphere radius="0.012" />
+         </geometry>
+         <origin rpy="0 0 0" xyz="0 0 0" />
+      </collision>
+      <inertial>
+         <mass value="0.0168" />
+         <origin xyz="0 0 0" rpy="0 0 0" />
+         <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0" />
+      </inertial>
+   </link>
+   <joint name="la_joint_15_0_tip" type="fixed">
+      <parent link="la_link_15_0" />
+      <child link="la_link_15_0_tip" />
+      <origin rpy="0 0 0" xyz="0.01335 0 0.0564" />
+   </joint>
+</robot>

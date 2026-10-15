@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<robot name="my_dual_robot_cell" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!--First, include the macro from our custom description-->
+  <xacro:include
+    filename="$(find my_dual_robot_cell_description)/urdf/tshape_dual_v2.xacro" />
+  <!-- <xacro:include
+    filename="$(find my_dual_robot_cell_description)/urdf/my_dual_robot_cell_macro_v2.xacro" /> -->
+  <!--The driver already provides a control tag for the UR arm, we can directly include-->
+  <xacro:include filename="$(find ur_robot_driver)/urdf/ur.ros2_control.xacro" />
+
+  <!--We need to specify the arguments used for parametrizing our description-->
+  <xacro:arg name="la_ur_type" default="ur3e" />
+  <xacro:arg name="la_joint_limits_parameters_file" default="$(find ur_description)/config/$(arg la_ur_type)/joint_limits.yaml" />
+  <xacro:arg name="la_kinematics_parameters_file" default="$(find ur_description)/config/$(arg la_ur_type)/default_kinematics.yaml" />
+  <xacro:arg name="la_physical_parameters_file" default="$(find ur_description)/config/$(arg la_ur_type)/physical_parameters.yaml" />
+  <xacro:arg name="la_visual_parameters_file" default="$(find ur_description)/config/$(arg la_ur_type)/visual_parameters.yaml" />
+
+  <xacro:arg name="ra_ur_type" default="ur3" />
+  <xacro:arg name="ra_joint_limits_parameters_file" default="$(find ur_description)/config/$(arg ra_ur_type)/joint_limits.yaml" />
+  <xacro:arg name="ra_kinematics_parameters_file" default="$(find ur_description)/config/$(arg ra_ur_type)/default_kinematics.yaml" />
+  <xacro:arg name="ra_physical_parameters_file" default="$(find ur_description)/config/$(arg ra_ur_type)/physical_parameters.yaml" />
+  <xacro:arg name="ra_visual_parameters_file" default="$(find ur_description)/config/$(arg ra_ur_type)/visual_parameters.yaml" />
+
+  <xacro:arg name="la_use_mock_hardware" default="false" />
+  <xacro:arg name="la_mock_sensor_commands" default="false" />
+  <xacro:arg name="la_robot_ip" default="192.168.0.121" />
+  <xacro:arg name="la_reverse_port" default="60001" />
+  <xacro:arg name="la_script_sender_port" default="60002" />
+  <xacro:arg name="la_script_command_port" default="60004" />
+  <xacro:arg name="la_trajectory_port" default="60003" />
+
+  <xacro:arg name="ra_use_mock_hardware" default="false" />
+  <xacro:arg name="ra_mock_sensor_commands" default="false" />
+  <xacro:arg name="ra_robot_ip" default="192.168.0.120" />
+  <xacro:arg name="ra_reverse_port" default="50001" />
+  <xacro:arg name="ra_script_sender_port" default="50002" />
+  <xacro:arg name="ra_script_command_port" default="50004" />
+  <xacro:arg name="ra_trajectory_port" default="50003" />
+
+  <xacro:arg name="headless_mode" default="false" />
+  <xacro:arg name="ur_script_filename" default="$(find ur_client_library)/resources/external_control.urscript" />
+  <xacro:arg name="ur_output_recipe_filename" default="$(find ur_robot_driver)/resources/rtde_output_recipe.txt" />
+  <xacro:arg name="ur_input_recipe_filename" default="$(find ur_robot_driver)/resources/rtde_input_recipe.txt" />
+
+
+  <link name="world" />
+
+  <xacro:my_dual_robot_cell
+    parent="world"
+    la_ur_type="$(arg la_ur_type)"
+    la_joint_limits_parameters_file="$(arg la_joint_limits_parameters_file)"
+    la_kinematics_parameters_file="$(arg la_kinematics_parameters_file)"
+    la_physical_parameters_file="$(arg la_physical_parameters_file)"
+    la_visual_parameters_file="$(arg la_visual_parameters_file)"
+    ra_ur_type="$(arg ra_ur_type)"
+    ra_joint_limits_parameters_file="$(arg ra_joint_limits_parameters_file)"
+    ra_kinematics_parameters_file="$(arg ra_kinematics_parameters_file)"
+    ra_physical_parameters_file="$(arg ra_physical_parameters_file)"
+    ra_visual_parameters_file="$(arg ra_visual_parameters_file)"
+  >
+    <origin xyz="0 0 0.75" rpy="0 0 0" />
+  </xacro:my_dual_robot_cell>
+
+  <xacro:ur_ros2_control
+    name="la"
+    tf_prefix="la_"
+    kinematics_parameters_file="$(arg la_kinematics_parameters_file)"
+    robot_ip="$(arg la_robot_ip)"
+    script_filename="$(arg ur_script_filename)"
+    output_recipe_filename="$(arg ur_output_recipe_filename)"
+    input_recipe_filename="$(arg ur_input_recipe_filename)"
+    use_mock_hardware="$(arg la_use_mock_hardware)"
+    mock_sensor_commands="$(arg la_mock_sensor_commands)"
+    headless_mode="$(arg headless_mode)"
+    reverse_port="$(arg la_reverse_port)"
+    script_sender_port="$(arg la_script_sender_port)"
+    script_command_port="$(arg la_script_command_port)"
+    trajectory_port="$(arg la_trajectory_port)"
+    initial_positions="${dict(shoulder_pan_joint=-28.54, shoulder_lift_joint=-123.63, elbow_joint=-137.41, wrist_1_joint=73.44, wrist_2_joint=81.66, wrist_3_joint=138.93)}"
+  />
+
+  <xacro:ur_ros2_control
+    name="ra"
+    tf_prefix="ra_"
+    kinematics_parameters_file="$(arg ra_kinematics_parameters_file)"
+    robot_ip="$(arg ra_robot_ip)"
+    script_filename="$(arg ur_script_filename)"
+    output_recipe_filename="$(arg ur_output_recipe_filename)"
+    input_recipe_filename="$(arg ur_input_recipe_filename)"
+    use_mock_hardware="$(arg ra_use_mock_hardware)"
+    mock_sensor_commands="$(arg ra_mock_sensor_commands)"
+    headless_mode="$(arg headless_mode)"
+    reverse_port="$(arg ra_reverse_port)"
+    script_sender_port="$(arg ra_script_sender_port)"
+    script_command_port="$(arg ra_script_command_port)"
+    trajectory_port="$(arg ra_trajectory_port)"
+    initial_positions="${dict(shoulder_pan_joint=26.73, shoulder_lift_joint=-71.29, elbow_joint=140.68, wrist_1_joint=-232.63, wrist_2_joint=-45.48, wrist_3_joint=223.71)}"
+  />
+
+</robot>

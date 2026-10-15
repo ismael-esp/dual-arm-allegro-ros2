@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <name>allegro_hand_parameters</name>
+  <version>1.0.0</version>
+  <description>The ROS2 package stores all configuration parameters of Allegro Hand V4</description>
+
+  <maintainer email="wonikrobotics@gmail.com">Wonikrobotics-git</maintainer>
+  <license>BSD</license>
+  <url type="website">https://www.allegrohand.com/</url>
+  <url type="website">https://github.com/Wonikrobotics-git/</url>
+
+  <author email="jh.bong@wonikrobotics.com">JinHwon Bong</author>
+  <author email="j.y_lee@wonikrobotics.com">JungYeon Lee</author>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

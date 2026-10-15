@@ -1,0 +1,68 @@
+# Constants. The _0,_1,_2,_3 refears to the joint of each IMA finger.
+kp_constant_03: &kp_constant_03 800.0
+kp_constant_1: &kp_constant_1 1500.0
+kp_constant_2: &kp_constant_2 2000.0
+
+ki_constant_0: &ki_constant_0 150.0
+ki_constant_1: &ki_constant_1 800.0
+ki_constant_2: &ki_constant_2 800.0
+ki_constant_3: &ki_constant_3 300.0
+
+kd_constant_0: &kd_constant_0 50.0
+kd_constant_1: &kd_constant_1 50.0
+kd_constant_23: &kd_constant_23 80.0
+# Gains for the Proportional-Integral-Derivative Joint Space Controller
+# proportial
+kp:
+  j00: *kp_constant_03
+  j01: *kp_constant_1
+  j02: *kp_constant_2
+  j03: *kp_constant_03
+  j10: *kp_constant_03
+  j11: *kp_constant_1
+  j12: *kp_constant_2
+  j13: *kp_constant_03
+  j20: 700.0
+  j21: *kp_constant_1
+  j22: *kp_constant_2
+  j23: *kp_constant_03
+  j30: 3000.0
+  j31: 2200.0
+  j32: 2000.0
+  j33: 1800.0
+# Integral
+ki:
+  j00: *ki_constant_0
+  j01: 500.0
+  j02: *ki_constant_2
+  j03: *ki_constant_3
+  j10: *ki_constant_0
+  j11: *ki_constant_1
+  j12: 500.0
+  j13: *ki_constant_3
+  j20: *ki_constant_0
+  j21: 500.0
+  j22: 500.0
+  j23: 300.0
+  j30: 800.0
+  j31: 300.0
+  j32: 1000.0
+  j33: 1000.0
+# Derivative
+kd:
+  j00: *kd_constant_0
+  j01: 20.0
+  j02: *kd_constant_23
+  j03: *kd_constant_23
+  j10: *kd_constant_0
+  j11: *kd_constant_1
+  j12: *kd_constant_23
+  j13: *kd_constant_23
+  j20: *kd_constant_0
+  j21: 20.0
+  j22: *kd_constant_23
+  j23: *kd_constant_23
+  j30: 80.0
+  j31: 100.0
+  j32: 50.0
+  j33: 50.0

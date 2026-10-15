@@ -1,0 +1,446 @@
+diff --git a/cam2_color_intrinsics.yaml b/cam2_color_intrinsics.yaml
+new file mode 100644
+index 00000000..8d981b18
+--- /dev/null
++++ b/cam2_color_intrinsics.yaml
+@@ -0,0 +1,26 @@
++image_width: 1280
++image_height: 720
++camera_name: cam2_color
++camera_matrix:
++  rows: 3
++  cols: 3
++  data: [883.8896440520488, 0.0, 643.7869622952036,
++         0.0, 882.9778571291803, 365.58472247457706,
++         0.0, 0.0, 1.0]
++distortion_model: plumb_bob
++distortion_coefficients:
++  rows: 1
++  cols: 5
++  data: [0.12746014993842686, -0.3720943511861074, 0.004142717089169178, -0.0010136905357616178, 0.2254865197894849]
++rectification_matrix:
++  rows: 3
++  cols: 3
++  data: [1.0, 0.0, 0.0,
++         0.0, 1.0, 0.0,
++         0.0, 0.0, 1.0]
++projection_matrix:
++  rows: 3
++  cols: 4
++  data: [883.8896440520488, 0.0, 643.7869622952036, 0.0,
++         0.0, 882.9778571291803, 365.58472247457706, 0.0,
++         0.0, 0.0, 1.0, 0.0]
+diff --git a/cam_tf_tuner.py b/cam_tf_tuner.py
+new file mode 100644
+index 00000000..c44ab02b
+--- /dev/null
++++ b/cam_tf_tuner.py
+@@ -0,0 +1,125 @@
++#!/usr/bin/env python3
++"""
++cam_tf_tuner.py
++
++Interactive static TF tuner. Publishes a parent->child transform whose 6-DOF
++pose is controlled live by ROS parameters (x, y, z, roll, pitch, yaw).
++
++Use this to manually polish a hand-eye calibration result when the solver has
++plateaued at its systematic floor.
++
++Workflow:
++    1. Stop the existing static_transform_publisher for the same frame pair
++       (e.g. comment out cam2_tf_node in start_torso_config.launch.py).
++    2. Launch the rest of the system normally.
++    3. Run this node, defaulting to your current calibration values:
++          ros2 run easy_handeye2 cam_tf_tuner.py
++    4. Tweak parameters live in another terminal:
++          ros2 param set /cam_tf_tuner pitch 0.005
++       Watch the point cloud realign with the URDF in RViz.
++    5. Verify quantitatively each step:
++          ros2 run easy_handeye2 table_tilt.py
++    6. When tilt is below your target (~0.3 deg), the script logs the final
++       values formatted ready to paste back into your launch file.
++
++Tweak granularity reference (rotation):
++       0.1 deg = 0.00175 rad
++       0.5 deg = 0.00873 rad
++       1.0 deg = 0.01745 rad
++"""
++import math
++import rclpy
++from rclpy.node import Node
++from rcl_interfaces.msg import SetParametersResult
++from geometry_msgs.msg import TransformStamped
++import tf2_ros
++
++
++def rpy_to_quat(roll, pitch, yaw):
++    """ZYX (yaw-pitch-roll) Euler -> quaternion (xyzw). Matches tf2_echo RPY."""
++    cy, sy = math.cos(yaw * 0.5), math.sin(yaw * 0.5)
++    cp, sp = math.cos(pitch * 0.5), math.sin(pitch * 0.5)
++    cr, sr = math.cos(roll * 0.5), math.sin(roll * 0.5)
++    return (
++        sr * cp * cy - cr * sp * sy,
++        cr * sp * cy + sr * cp * sy,
++        cr * cp * sy - sr * sp * cy,
++        cr * cp * cy + sr * sp * sy,
++    )
++
++
++PARAM_NAMES = ('parent_frame', 'child_frame',
++               'x', 'y', 'z', 'roll', 'pitch', 'yaw')
++
++
++class CamTFTuner(Node):
++    def __init__(self):
++        super().__init__('cam_tf_tuner')
++        # Defaults = ra_base_link -> cam2_link from last hand-eye calibration.
++        # Override any of these at launch with --ros-args -p name:=value.
++        self.declare_parameter('parent_frame', 'ra_base_link')
++        self.declare_parameter('child_frame',  'cam2_link')
++        self.declare_parameter('x',      0.282625)
++        self.declare_parameter('y',      1.189474)
++        self.declare_parameter('z',      0.555863)
++        self.declare_parameter('roll',   2.742)
++        self.declare_parameter('pitch', -0.004)
++        self.declare_parameter('yaw',   -1.347)
++
++        self.bcaster = tf2_ros.StaticTransformBroadcaster(self)
++        self.last_snapshot = None
++        self.add_on_set_parameters_callback(self.on_param_change)
++
++        # Publish once now, then re-check at 5 Hz; publish only on change.
++        self.publish_tf(log=True)
++        self.create_timer(0.2, self.tick)
++
++    def on_param_change(self, params):
++        # Accept all valid value changes - publish happens in tick().
++        return SetParametersResult(successful=True)
++
++    def snapshot(self):
++        return tuple(self.get_parameter(n).value for n in PARAM_NAMES)
++
++    def tick(self):
++        cur = self.snapshot()
++        if cur != self.last_snapshot:
++            self.publish_tf(log=True)
++            self.last_snapshot = cur
++
++    def publish_tf(self, log):
++        p = lambda n: self.get_parameter(n).value
++        roll, pitch, yaw = p('roll'), p('pitch'), p('yaw')
++        qx, qy, qz, qw = rpy_to_quat(roll, pitch, yaw)
++
++        t = TransformStamped()
++        t.header.stamp = self.get_clock().now().to_msg()
++        t.header.frame_id = p('parent_frame')
++        t.child_frame_id  = p('child_frame')
++        t.transform.translation.x = float(p('x'))
++        t.transform.translation.y = float(p('y'))
++        t.transform.translation.z = float(p('z'))
++        t.transform.rotation.x = qx
++        t.transform.rotation.y = qy
++        t.transform.rotation.z = qz
++        t.transform.rotation.w = qw
++        self.bcaster.sendTransform(t)
++
++        if log:
++            self.get_logger().info(
++                "\n=== Current TF (paste these into your launch file) ===\n"
++                f"  {p('parent_frame')} -> {p('child_frame')}\n"
++                f"  --x  {p('x'):+.6f}   --y  {p('y'):+.6f}   --z  {p('z'):+.6f}\n"
++                f"  --qx {qx:+.6f}  --qy {qy:+.6f}  --qz {qz:+.6f}  --qw {qw:+.6f}\n"
++                f"  RPY (rad): roll={roll:+.6f} pitch={pitch:+.6f} yaw={yaw:+.6f}\n"
++                f"  RPY (deg): roll={math.degrees(roll):+.3f} "
++                f"pitch={math.degrees(pitch):+.3f} yaw={math.degrees(yaw):+.3f}")
++
++
++def main():
++    rclpy.init()
++    rclpy.spin(CamTFTuner())
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/realsense2_camera/CMakeLists.txt b/realsense2_camera/CMakeLists.txt
+index f8a66a6a..ce326800 100644
+--- a/realsense2_camera/CMakeLists.txt
++++ b/realsense2_camera/CMakeLists.txt
+@@ -120,6 +120,7 @@ find_package(tf2_ros REQUIRED)
+ find_package(tf2 REQUIRED)
+ find_package(diagnostic_updater REQUIRED)
+ find_package(OpenCV REQUIRED COMPONENTS core)
++find_package(yaml-cpp REQUIRED)
+ 
+ find_package(realsense2 2.56)
+ if (BUILD_ACCELERATE_GPU_WITH_GLSL)
+@@ -245,6 +246,7 @@ else()
+ endif()
+ 
+ list(APPEND link_libraries ${OpenCV_LIBS})  # add OpenCV libs to link_libraries
++list(APPEND link_libraries yaml-cpp)         # for camera_info_url YAML override
+ 
+ target_link_libraries(${PROJECT_NAME}
+     ${link_libraries}
+diff --git a/realsense2_camera/launch/rs_launch.py b/realsense2_camera/launch/rs_launch.py
+index 8529117b..782c00f4 100644
+--- a/realsense2_camera/launch/rs_launch.py
++++ b/realsense2_camera/launch/rs_launch.py
+@@ -27,13 +27,17 @@ configurable_parameters = [{'name': 'camera_name',                  'default': '
+                            {'name': 'device_type',                  'default': "''", 'description': 'choose device by type'},
+                            {'name': 'config_file',                  'default': "''", 'description': 'yaml config file'},
+                            {'name': 'json_file_path',               'default': "''", 'description': 'allows advanced configuration'},
+-                           {'name': 'initial_reset',                'default': 'false', 'description': "''"},
+-                           {'name': 'accelerate_gpu_with_glsl',     'default': "false", 'description': 'enable GPU acceleration with GLSL'},
++                           {'name': 'initial_reset',                'default': 'true', 'description': "''"},
++                           {'name': 'accelerate_gpu_with_glsl',     'default': "true", 'description': 'enable GPU acceleration with GLSL'},
+                            {'name': 'rosbag_filename',              'default': "''", 'description': 'A realsense bagfile to run from as a device'},
+                            {'name': 'rosbag_loop',                  'default': 'false', 'description': 'Enable loop playback when playing a bagfile'},
+                            {'name': 'log_level',                    'default': 'info', 'description': 'debug log level [DEBUG|INFO|WARN|ERROR|FATAL]'},
+                            {'name': 'output',                       'default': 'screen', 'description': 'pipe node output [screen|log]'},
+                            {'name': 'enable_color',                 'default': 'true', 'description': 'enable color stream'},
++                           {'name': 'color.camera_info_url',        'default': '', 'description': 'URL to YAML overriding color intrinsics (patch)'},
++                           {'name': 'depth.camera_info_url',        'default': '', 'description': 'URL to YAML overriding depth intrinsics (patch)'},
++                           {'name': 'infra1.camera_info_url',       'default': '', 'description': 'URL to YAML overriding infra1 intrinsics (patch)'},
++                           {'name': 'infra2.camera_info_url',       'default': '', 'description': 'URL to YAML overriding infra2 intrinsics (patch)'},
+                            {'name': 'rgb_camera.color_profile',     'default': '0,0,0', 'description': 'color stream profile'},
+                            {'name': 'rgb_camera.color_format',      'default': 'RGB8', 'description': 'color stream format'},
+                            {'name': 'rgb_camera.enable_auto_exposure', 'default': 'true', 'description': 'enable/disable auto exposure for color image'},
+diff --git a/realsense2_camera/package.xml b/realsense2_camera/package.xml
+index 44a8b4d9..b25e03f3 100644
+--- a/realsense2_camera/package.xml
++++ b/realsense2_camera/package.xml
+@@ -34,6 +34,7 @@
+   <depend>tf2</depend>
+   <depend>tf2_ros</depend>
+   <depend>diagnostic_updater</depend>
++  <depend>yaml-cpp</depend>
+   <test_depend condition="$ROS_DISTRO != foxy">ament_cmake_gtest</test_depend>
+   <test_depend condition="$ROS_DISTRO != foxy">launch_testing</test_depend>
+   <test_depend condition="$ROS_DISTRO != foxy">ament_cmake_pytest</test_depend>
+diff --git a/realsense2_camera/src/base_realsense_node.cpp b/realsense2_camera/src/base_realsense_node.cpp
+index 84a47ba3..0c145704 100755
+--- a/realsense2_camera/src/base_realsense_node.cpp
++++ b/realsense2_camera/src/base_realsense_node.cpp
+@@ -19,6 +19,7 @@
+ #include <rclcpp/clock.hpp>
+ #include <fstream>
+ #include <image_publisher.h>
++#include <yaml-cpp/yaml.h>
+ 
+ // Header files for disabling intra-process comms for static broadcaster.
+ #include <rclcpp/publisher_options.hpp>
+@@ -847,6 +848,74 @@ void BaseRealSenseNode::updateStreamCalibData(const rs2::video_stream_profile& v
+         _camera_info[stream_index].p.at(3) = 0;     // Tx
+         _camera_info[stream_index].p.at(7) = 0;     // Ty
+     }
++
++    // ---- PATCH: per-stream camera_info_url override ----
++    // Looks for a ROS parameter "<stream_name>.camera_info_url" (e.g.
++    // "color.camera_info_url"). If set to a file:// URL pointing to a
++    // standard camera_info YAML, the K, P, D and distortion_model fields
++    // are overwritten with the YAML's calibrated values. Otherwise the
++    // firmware values from librealsense are kept unchanged.
++    std::string stream_name = STREAM_NAME(stream_index);
++    std::string url_param = stream_name + ".camera_info_url";
++    std::string camera_info_url = _parameters->setParam<std::string>(url_param, std::string(""));
++    if (!camera_info_url.empty())
++    {
++        const std::string file_prefix = "file://";
++        std::string path = camera_info_url;
++        if (path.rfind(file_prefix, 0) == 0)
++            path = path.substr(file_prefix.size());
++        try
++        {
++            YAML::Node cal = YAML::LoadFile(path);
++            int yaml_w = cal["image_width"].as<int>();
++            int yaml_h = cal["image_height"].as<int>();
++            if (yaml_w != static_cast<int>(intrinsic.width) ||
++                yaml_h != static_cast<int>(intrinsic.height))
++            {
++                ROS_WARN_STREAM("camera_info_url for stream '" << stream_name
++                    << "' has resolution " << yaml_w << "x" << yaml_h
++                    << " but stream is " << intrinsic.width << "x"
++                    << intrinsic.height << " - using FIRMWARE intrinsics.");
++            }
++            else
++            {
++                auto K = cal["camera_matrix"]["data"].as<std::vector<double>>();
++                auto D = cal["distortion_coefficients"]["data"].as<std::vector<double>>();
++                auto P = cal["projection_matrix"]["data"].as<std::vector<double>>();
++                auto R = cal["rectification_matrix"]["data"].as<std::vector<double>>();
++                std::string model = cal["distortion_model"]
++                    ? cal["distortion_model"].as<std::string>() : std::string("plumb_bob");
++
++                if (K.size() == 9 && P.size() == 12 && R.size() == 9)
++                {
++                    for (size_t i = 0; i < 9; ++i)
++                        _camera_info[stream_index].k.at(i) = K[i];
++                    for (size_t i = 0; i < 12; ++i)
++                        _camera_info[stream_index].p.at(i) = P[i];
++                    for (size_t i = 0; i < 9; ++i)
++                        _camera_info[stream_index].r.at(i) = R[i];
++                    _camera_info[stream_index].d.assign(D.begin(), D.end());
++                    _camera_info[stream_index].distortion_model = model;
++                    ROS_INFO_STREAM("Loaded calibrated intrinsics for stream '"
++                        << stream_name << "' from " << path
++                        << " (fx=" << K[0] << ", fy=" << K[4]
++                        << ", cx=" << K[2] << ", cy=" << K[5] << ")");
++                }
++                else
++                {
++                    ROS_WARN_STREAM("camera_info_url YAML at " << path
++                        << " has unexpected matrix sizes - using FIRMWARE intrinsics.");
++                }
++            }
++        }
++        catch (const std::exception& e)
++        {
++            ROS_WARN_STREAM("Failed to load camera_info_url '" << camera_info_url
++                << "' for stream '" << stream_name << "': " << e.what()
++                << " - using FIRMWARE intrinsics.");
++        }
++    }
++    // ---- end PATCH ----
+ }
+ 
+ void BaseRealSenseNode::updateExtrinsicsCalibData(const rs2::video_stream_profile& left_video_profile, const rs2::video_stream_profile& right_video_profile)
+diff --git a/table_tilt.py b/table_tilt.py
+new file mode 100644
+index 00000000..addc7def
+--- /dev/null
++++ b/table_tilt.py
+@@ -0,0 +1,134 @@
++#!/usr/bin/env python3
++"""
++table_tilt.py
++
++Subscribe to a depth point cloud, transform points to a target frame
++(default: world), fit the largest plane inside a configurable z-band,
++and report the plane's tilt vs. world +Z as well as its height.
++
++The tilt is a direct proxy for the residual rotation error of your
++hand-eye calibration when pointed at a known-horizontal surface
++(table top, floor, etc.).
++
++Usage:
++    python3 table_tilt.py
++    # or, once installed via setup.py:
++    ros2 run easy_handeye2 table_tilt.py
++
++Adjust the constants below for your topic / frame / table band.
++"""
++import rclpy
++from rclpy.node import Node
++from sensor_msgs.msg import PointCloud2
++import sensor_msgs_py.point_cloud2 as pc2
++import numpy as np
++import tf2_ros
++
++
++def quat_to_matrix(qx, qy, qz, qw):
++    """Quaternion (xyzw) -> 3x3 rotation matrix. Pure NumPy."""
++    n = qx * qx + qy * qy + qz * qz + qw * qw
++    if n < 1e-12:
++        return np.eye(3)
++    s = 2.0 / n
++    xx, yy, zz = qx * qx * s, qy * qy * s, qz * qz * s
++    xy, xz, yz = qx * qy * s, qx * qz * s, qy * qz * s
++    wx, wy, wz = qw * qx * s, qw * qy * s, qw * qz * s
++    return np.array([
++        [1.0 - (yy + zz), xy - wz,         xz + wy],
++        [xy + wz,         1.0 - (xx + zz), yz - wx],
++        [xz - wy,         yz + wx,         1.0 - (xx + yy)],
++    ])
++
++
++# --- adjust these to your setup ---
++TOPIC = '/extra/cam2/depth/color/points'    # aligned depth cloud
++TARGET_FRAME = 'world'
++Z_MIN, Z_MAX = 0.88, 0.95                    # world-Z band where the table top lives
++RANSAC_THRESH = 0.005                       # 5 mm
++RANSAC_ITERS = 2000
++
++
++class TableTilt(Node):
++    def __init__(self):
++        super().__init__('table_tilt')
++        self.tfb = tf2_ros.Buffer()
++        self.tfl = tf2_ros.TransformListener(self.tfb, self)
++        self.done = False
++        self.create_subscription(PointCloud2, TOPIC, self.cb, 10)
++        self.get_logger().info(f'Listening on {TOPIC}; target frame: {TARGET_FRAME}')
++
++    def cb(self, msg):
++        if self.done:
++            return
++        try:
++            t = self.tfb.lookup_transform(
++                TARGET_FRAME, msg.header.frame_id,
++                rclpy.time.Time(),
++                rclpy.duration.Duration(seconds=2.0))
++        except Exception as e:
++            self.get_logger().warn(f'TF lookup failed: {e}; will retry on next msg')
++            return
++        self.done = True
++
++        T = np.eye(4)
++        T[:3, :3] = quat_to_matrix(
++            t.transform.rotation.x, t.transform.rotation.y,
++            t.transform.rotation.z, t.transform.rotation.w)
++        T[:3, 3] = [t.transform.translation.x,
++                    t.transform.translation.y,
++                    t.transform.translation.z]
++
++        pts = np.array([(p[0], p[1], p[2]) for p in
++                        pc2.read_points(msg, field_names=['x', 'y', 'z'], skip_nans=True)],
++                       dtype=np.float64)
++        self.get_logger().info(f'Got {len(pts)} valid points')
++
++        pts_w = (T @ np.c_[pts, np.ones(len(pts))].T).T[:, :3]
++        self.get_logger().info(
++            f'World Z range:  min={pts_w[:, 2].min():.3f}  max={pts_w[:, 2].max():.3f}')
++
++        mask = (pts_w[:, 2] > Z_MIN) & (pts_w[:, 2] < Z_MAX)
++        tbl = pts_w[mask]
++        self.get_logger().info(f'Points in z-band [{Z_MIN}, {Z_MAX}]: {len(tbl)}')
++        if len(tbl) < 1000:
++            self.get_logger().error('Too few points in band - adjust Z_MIN/Z_MAX')
++            rclpy.shutdown()
++            return
++
++        rng = np.random.default_rng(42)
++        best_inl, best_plane = 0, None
++        for _ in range(RANSAC_ITERS):
++            i = rng.choice(len(tbl), 3, replace=False)
++            p1, p2, p3 = tbl[i]
++            n = np.cross(p2 - p1, p3 - p1)
++            nn = np.linalg.norm(n)
++            if nn < 1e-9:
++                continue
++            n /= nn
++            d = -n @ p1
++            inl = int((np.abs(tbl @ n + d) < RANSAC_THRESH).sum())
++            if inl > best_inl:
++                best_inl, best_plane = inl, (n, d)
++
++        n, d = best_plane
++        if n[2] < 0:
++            n, d = -n, -d
++        tilt = np.degrees(np.arccos(np.clip(n @ np.array([0, 0, 1]), -1, 1)))
++        table_z = -d
++
++        self.get_logger().info('=== RESULT ===')
++        self.get_logger().info(f'  Plane normal (world): [{n[0]:+.4f} {n[1]:+.4f} {n[2]:+.4f}]')
++        self.get_logger().info(f'  Tilt vs world Z:      {tilt:.3f} degrees')
++        self.get_logger().info(f'  Table top world Z:    {table_z:.4f} m')
++        self.get_logger().info(f'  Inliers: {best_inl} / {len(tbl)}')
++        rclpy.shutdown()
++
++
++def main():
++    rclpy.init()
++    rclpy.spin(TableTilt())
++
++
++if __name__ == '__main__':
++    main()

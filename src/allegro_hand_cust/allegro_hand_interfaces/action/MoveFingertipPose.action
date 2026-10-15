@@ -1,0 +1,8 @@
+geometry_msgs/Point coordinates
+float64[] euler_angles
+float64 percentage_velocity
+uint8 finger_id
+---
+bool status
+---
+sensor_msgs/JointState current_configuration

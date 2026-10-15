@@ -1,0 +1,863 @@
+Panels:
+  - Class: rviz_common/Displays
+    Help Height: 87
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /RobotModel1
+        - /TF1
+        - /TF1/Tree1
+        - /Image1
+        - /Image1/Topic1
+        - /Image2
+        - /Image2/Topic1
+        - /Image3
+        - /Image3/Topic1
+        - /PointCloud21
+      Splitter Ratio: 0.3743119239807129
+    Tree Height: 791
+  - Class: rviz_common/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 1
+      Class: rviz_default_plugins/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 10
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Alpha: 1
+      Class: rviz_default_plugins/RobotModel
+      Collision Enabled: false
+      Description File: ""
+      Description Source: Topic
+      Description Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /robot_description
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        la_base:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        la_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        la_base_link_inertia:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_ee_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        la_flange:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        la_forearm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_0_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_10_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_11_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_11_0_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_12_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_13_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_14_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_15_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_15_0_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_1_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_2_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_3_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_3_0_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_4_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_5_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_6_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_7_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_7_0_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_8_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_link_9_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_palm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_robot_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        la_shoulder_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_tool0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        la_upper_arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_wrist_1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_wrist_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        la_wrist_3_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_base:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ra_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ra_base_link_inertia:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_ee_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ra_flange:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ra_forearm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_0_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_10_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_11_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_11_0_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_12_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_13_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_14_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_15_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_15_0_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_1_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_2_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_3_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_3_0_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_4_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_5_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_6_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_7_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_7_0_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_8_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_link_9_0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_palm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_robot_mount:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ra_shoulder_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_tool0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        ra_upper_arm_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_wrist_1_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_wrist_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ra_wrist_3_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        table:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ur_stand:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+      Mass Properties:
+        Inertia: false
+        Mass: false
+      Name: RobotModel
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Filter (blacklist): ""
+      Filter (whitelist): ""
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+        cam1_color_frame:
+          Value: true
+        cam1_color_optical_frame:
+          Value: true
+        cam1_depth_frame:
+          Value: true
+        cam1_depth_optical_frame:
+          Value: true
+        cam1_link:
+          Value: true
+        cam2_color_frame:
+          Value: true
+        cam2_color_optical_frame:
+          Value: true
+        cam2_depth_frame:
+          Value: true
+        cam2_depth_optical_frame:
+          Value: true
+        cam2_link:
+          Value: true
+        cam3_color_frame:
+          Value: true
+        cam3_color_optical_frame:
+          Value: true
+        cam3_depth_frame:
+          Value: true
+        cam3_depth_optical_frame:
+          Value: true
+        cam3_link:
+          Value: true
+        la_/contact_frame_Annular_ros:
+          Value: true
+        la_/contact_frame_Index_ros:
+          Value: true
+        la_/contact_frame_Middle_ros:
+          Value: true
+        la_/contact_frame_Thumb_ros:
+          Value: true
+        la_/link_11_0_tip:
+          Value: true
+        la_/link_15_0_tip:
+          Value: true
+        la_/link_3_0_tip:
+          Value: true
+        la_/link_7_0_tip:
+          Value: true
+        la_base:
+          Value: true
+        la_base_link:
+          Value: true
+        la_base_link_inertia:
+          Value: true
+        la_ee_link:
+          Value: true
+        la_flange:
+          Value: true
+        la_forearm_link:
+          Value: true
+        la_link_0_0:
+          Value: true
+        la_link_10_0:
+          Value: true
+        la_link_11_0:
+          Value: true
+        la_link_11_0_tip:
+          Value: true
+        la_link_12_0:
+          Value: true
+        la_link_13_0:
+          Value: true
+        la_link_14_0:
+          Value: true
+        la_link_15_0:
+          Value: true
+        la_link_15_0_tip:
+          Value: true
+        la_link_1_0:
+          Value: true
+        la_link_2_0:
+          Value: true
+        la_link_3_0:
+          Value: true
+        la_link_3_0_tip:
+          Value: true
+        la_link_4_0:
+          Value: true
+        la_link_5_0:
+          Value: true
+        la_link_6_0:
+          Value: true
+        la_link_7_0:
+          Value: true
+        la_link_7_0_tip:
+          Value: true
+        la_link_8_0:
+          Value: true
+        la_link_9_0:
+          Value: true
+        la_palm_link:
+          Value: true
+        la_robot_mount:
+          Value: true
+        la_shoulder_link:
+          Value: true
+        la_tool0:
+          Value: true
+        la_upper_arm_link:
+          Value: true
+        la_wrist_1_link:
+          Value: true
+        la_wrist_2_link:
+          Value: true
+        la_wrist_3_link:
+          Value: true
+        ra_/contact_frame_Annular_ros:
+          Value: true
+        ra_/contact_frame_Index_ros:
+          Value: true
+        ra_/contact_frame_Middle_ros:
+          Value: true
+        ra_/contact_frame_Thumb_ros:
+          Value: true
+        ra_/link_11_0_tip:
+          Value: true
+        ra_/link_15_0_tip:
+          Value: true
+        ra_/link_3_0_tip:
+          Value: true
+        ra_/link_7_0_tip:
+          Value: true
+        ra_base:
+          Value: true
+        ra_base_link:
+          Value: true
+        ra_base_link_inertia:
+          Value: true
+        ra_ee_link:
+          Value: true
+        ra_flange:
+          Value: true
+        ra_forearm_link:
+          Value: true
+        ra_link_0_0:
+          Value: true
+        ra_link_10_0:
+          Value: true
+        ra_link_11_0:
+          Value: true
+        ra_link_11_0_tip:
+          Value: true
+        ra_link_12_0:
+          Value: true
+        ra_link_13_0:
+          Value: true
+        ra_link_14_0:
+          Value: true
+        ra_link_15_0:
+          Value: true
+        ra_link_15_0_tip:
+          Value: true
+        ra_link_1_0:
+          Value: true
+        ra_link_2_0:
+          Value: true
+        ra_link_3_0:
+          Value: true
+        ra_link_3_0_tip:
+          Value: true
+        ra_link_4_0:
+          Value: true
+        ra_link_5_0:
+          Value: true
+        ra_link_6_0:
+          Value: true
+        ra_link_7_0:
+          Value: true
+        ra_link_7_0_tip:
+          Value: true
+        ra_link_8_0:
+          Value: true
+        ra_link_9_0:
+          Value: true
+        ra_palm_link:
+          Value: true
+        ra_robot_mount:
+          Value: true
+        ra_shoulder_link:
+          Value: true
+        ra_tool0:
+          Value: true
+        ra_upper_arm_link:
+          Value: true
+        ra_wrist_1_link:
+          Value: true
+        ra_wrist_2_link:
+          Value: true
+        ra_wrist_3_link:
+          Value: true
+        table:
+          Value: true
+        ur_stand:
+          Value: true
+        world:
+          Value: true
+      Marker Scale: 0.30000001192092896
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: false
+      Tree:
+        world:
+          la_robot_mount:
+            la_base_link:
+              la_base:
+                {}
+              la_base_link_inertia:
+                la_shoulder_link:
+                  la_upper_arm_link:
+                    la_forearm_link:
+                      la_wrist_1_link:
+                        la_wrist_2_link:
+                          la_wrist_3_link:
+                            la_flange:
+                              la_ee_link:
+                                {}
+                              la_palm_link:
+                                la_link_0_0:
+                                  la_link_1_0:
+                                    la_link_2_0:
+                                      la_link_3_0:
+                                        la_link_3_0_tip:
+                                          {}
+                                la_link_12_0:
+                                  la_link_13_0:
+                                    la_link_14_0:
+                                      la_link_15_0:
+                                        la_link_15_0_tip:
+                                          {}
+                                la_link_4_0:
+                                  la_link_5_0:
+                                    la_link_6_0:
+                                      la_link_7_0:
+                                        la_link_7_0_tip:
+                                          {}
+                                la_link_8_0:
+                                  la_link_9_0:
+                                    la_link_10_0:
+                                      la_link_11_0:
+                                        la_link_11_0_tip:
+                                          {}
+                              la_tool0:
+                                {}
+          ra_robot_mount:
+            ra_base_link:
+              cam1_link:
+                cam1_color_frame:
+                  cam1_color_optical_frame:
+                    {}
+                cam1_depth_frame:
+                  cam1_depth_optical_frame:
+                    {}
+              cam2_link:
+                cam2_color_frame:
+                  cam2_color_optical_frame:
+                    {}
+                cam2_depth_frame:
+                  cam2_depth_optical_frame:
+                    {}
+              cam3_link:
+                cam3_color_frame:
+                  cam3_color_optical_frame:
+                    {}
+                cam3_depth_frame:
+                  cam3_depth_optical_frame:
+                    {}
+              ra_base:
+                {}
+              ra_base_link_inertia:
+                ra_shoulder_link:
+                  ra_upper_arm_link:
+                    ra_forearm_link:
+                      ra_wrist_1_link:
+                        ra_wrist_2_link:
+                          ra_wrist_3_link:
+                            ra_flange:
+                              ra_ee_link:
+                                {}
+                              ra_palm_link:
+                                ra_link_0_0:
+                                  ra_link_1_0:
+                                    ra_link_2_0:
+                                      ra_link_3_0:
+                                        ra_link_3_0_tip:
+                                          {}
+                                ra_link_12_0:
+                                  ra_link_13_0:
+                                    ra_link_14_0:
+                                      ra_link_15_0:
+                                        ra_link_15_0_tip:
+                                          {}
+                                ra_link_4_0:
+                                  ra_link_5_0:
+                                    ra_link_6_0:
+                                      ra_link_7_0:
+                                        ra_link_7_0_tip:
+                                          {}
+                                ra_link_8_0:
+                                  ra_link_9_0:
+                                    ra_link_10_0:
+                                      ra_link_11_0:
+                                        ra_link_11_0_tip:
+                                          {}
+                              ra_tool0:
+                                {}
+          table:
+            {}
+          ur_stand:
+            {}
+      Update Interval: 0
+      Value: true
+    - Class: rviz_default_plugins/Image
+      Enabled: true
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /front/cam1/color/image_raw
+      Value: true
+    - Class: rviz_default_plugins/Image
+      Enabled: true
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /head/cam2/color/image_raw
+      Value: true
+    - Class: rviz_default_plugins/Image
+      Enabled: true
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /back/cam3/color/image_raw
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz_default_plugins/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: false
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /head/cam2/depth/color/points
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: false
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Fixed Frame: world
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz_default_plugins/MoveCamera
+  Transformation:
+    Current:
+      Class: rviz_default_plugins/TF
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 3.8194990158081055
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.05999999865889549
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Focal Point:
+        X: -0.15485739707946777
+        Y: -0.01079958863556385
+        Z: 0.8499628305435181
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.05000000074505806
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.009999999776482582
+      Pitch: 0.4450013339519501
+      Target Frame: <Fixed Frame>
+      Value: Orbit (rviz)
+      Yaw: 3.1486165523529053
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 1023
+  Hide Left Dock: false
+  Hide Right Dock: false
+  Image:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd000000020000000000000223000003a9fc0200000003fc0000003b000003a9000000c700fffffffa000000010100000002fb0000000a0049006d0061006700650000000000ffffffff0000000000000000fb000000100044006900730070006c0061007900730100000000000002230000015600fffffffc0000023d000000b50000000000fffffffa000000000100000002fb0000000a0049006d0061006700650000000000ffffffff0000000000000000fb0000000a0049006d0061006700650000000000000002230000000000000000fb0000000a0049006d00610067006500000002bc0000012800000000000000000000000100000163000003a9fc0200000008fb0000000a00560069006500770073010000003b00000105000000a000fffffffb0000000a0049006d0061006700650100000146000000e90000001600fffffffb0000000a0049006d0061006700650100000235000000d70000001600fffffffb0000000a0049006d0061006700650100000312000000d20000001600fffffffb0000000a0049006d006100670065010000003b000000eb0000000000000000fb0000000a0049006d006100670065010000012c000001050000000000000000fb0000000a0049006d0061006700650100000237000000cb0000000000000000fb0000000a0049006d0061006700650100000308000000dc0000000000000000000003ee000003a900000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Views:
+    collapsed: false
+  Width: 1920
+  X: 0
+  Y: 25

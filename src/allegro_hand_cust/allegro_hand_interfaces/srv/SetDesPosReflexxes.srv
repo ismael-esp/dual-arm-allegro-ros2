@@ -1,0 +1,4 @@
+float64[] pos
+float64 min_duration #seconds
+---
+bool success

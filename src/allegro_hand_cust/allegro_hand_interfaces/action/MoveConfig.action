@@ -1,0 +1,6 @@
+float64[] final_configuration
+float64 percentage_velocity
+---
+bool status
+---
+sensor_msgs/JointState current_configuration 

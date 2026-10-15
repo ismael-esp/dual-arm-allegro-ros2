@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>bhand</name>
+  <version>1.0.0</version>
+  <description>BHand Library for Allegro Hand V4. Computing grasp configurations.</description>
+
+  <maintainer email="wonikrobotics@gmail.com">Wonikrobotics-git</maintainer>
+  <license>BSD</license>
+  <url type="website">https://www.allegrohand.com/</url>
+  <url type="website">https://github.com/Wonikrobotics-git/</url>
+
+  <author email="jh.bong@wonikrobotics.com">JinHwon Bong</author>
+  <author email="j.y_lee@wonikrobotics.com">JungYeon Lee</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

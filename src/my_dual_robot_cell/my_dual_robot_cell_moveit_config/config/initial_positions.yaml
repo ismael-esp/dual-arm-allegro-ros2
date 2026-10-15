@@ -1,0 +1,15 @@
+# Default initial positions for my_dual_robot_cell's ros2_control fake system
+
+initial_positions:
+  la_elbow_joint: 0
+  la_shoulder_lift_joint: 0
+  la_shoulder_pan_joint: 0
+  la_wrist_1_joint: 0
+  la_wrist_2_joint: 0
+  la_wrist_3_joint: 0
+  ra_elbow_joint: 0
+  ra_shoulder_lift_joint: 0
+  ra_shoulder_pan_joint: 0
+  ra_wrist_1_joint: 0
+  ra_wrist_2_joint: 0
+  ra_wrist_3_joint: 0

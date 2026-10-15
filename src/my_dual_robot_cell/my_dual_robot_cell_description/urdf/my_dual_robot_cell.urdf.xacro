@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot name="my_dual_robot_cell" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find my_dual_robot_cell_description)/urdf/my_dual_robot_cell_macro.xacro"/>
+
+  <xacro:arg name="la_ur_type" default="ur3e"/>
+  <xacro:arg name="la_joint_limits_parameters_file" default="$(find ur_description)/config/$(arg la_ur_type)/joint_limits.yaml"/>
+  <xacro:arg name="la_kinematics_parameters_file" default="$(find ur_description)/config/$(arg la_ur_type)/default_kinematics.yaml"/>
+  <xacro:arg name="la_physical_parameters_file" default="$(find ur_description)/config/$(arg la_ur_type)/physical_parameters.yaml"/>
+  <xacro:arg name="la_visual_parameters_file" default="$(find ur_description)/config/$(arg la_ur_type)/visual_parameters.yaml"/>
+
+  <xacro:arg name="ra_ur_type" default="ur3e"/>
+  <xacro:arg name="ra_joint_limits_parameters_file" default="$(find ur_description)/config/$(arg ra_ur_type)/joint_limits.yaml"/>
+  <xacro:arg name="ra_kinematics_parameters_file" default="$(find ur_description)/config/$(arg ra_ur_type)/default_kinematics.yaml"/>
+  <xacro:arg name="ra_physical_parameters_file" default="$(find ur_description)/config/$(arg ra_ur_type)/physical_parameters.yaml"/>
+  <xacro:arg name="ra_visual_parameters_file" default="$(find ur_description)/config/$(arg ra_ur_type)/visual_parameters.yaml"/>
+
+  <link name="world"/>
+  <!--This will create the scene where the robots are located in-->
+  <xacro:my_dual_robot_cell
+    parent="world"
+    
+    la_ur_type="$(arg la_ur_type)"
+    la_joint_limits_parameters_file="$(arg la_joint_limits_parameters_file)"
+    la_kinematics_parameters_file="$(arg la_kinematics_parameters_file)"
+    la_physical_parameters_file="$(arg la_physical_parameters_file)"
+    la_visual_parameters_file="$(arg la_visual_parameters_file)"
+
+    ra_ur_type="$(arg ra_ur_type)"
+    ra_joint_limits_parameters_file="$(arg ra_joint_limits_parameters_file)"
+    ra_kinematics_parameters_file="$(arg ra_kinematics_parameters_file)"
+    ra_physical_parameters_file="$(arg ra_physical_parameters_file)"
+    ra_visual_parameters_file="$(arg ra_visual_parameters_file)"
+    >
+      <origin xyz="0 0 1" rpy="0 0 0" />
+  </xacro:my_dual_robot_cell>
+
+</robot>

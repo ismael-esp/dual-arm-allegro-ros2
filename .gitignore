@@ -1,0 +1,71 @@
+# Whitelist: only the packages and files needed to bring up the dual-arm cell are tracked.
+# Upstream drivers (UR, RealSense) are fetched with `vcs import < dual_arm.repos`.
+/*
+!/.gitignore
+!/README.md
+!/LICENSE
+!/dual_arm.repos
+!/docker/
+!/docs/
+!/scripts/
+!/patches/
+!/.config/
+!/src/
+
+/src/*
+!/src/my_dual_robot_cell/
+!/src/allegro_hand_cust/
+!/src/allegro_hand_wonik/
+/src/allegro_hand_wonik/repo_wonik.xml
+!/src/my_robot_cell/
+/src/my_robot_cell/*
+!/src/my_robot_cell/my_robot_cell_description/
+
+# --- allegro_hand_cust (custom Allegro V4 driver) ---
+/src/allegro_hand_cust/repo_new_driver.xml
+/src/allegro_hand_cust/allegro_hand/build/
+/src/allegro_hand_cust/allegro_hand/conf/controllers/bck/
+
+# --- my_dual_robot_cell ---
+/src/my_dual_robot_cell/my_dual_robot_cell_moveit_config.zip
+/src/my_dual_robot_cell/my_dual_robot_cell_control/setup.py
+/src/my_dual_robot_cell/my_dual_robot_cell_control/config/bck/
+/src/my_dual_robot_cell/my_dual_robot_cell_control/config/left_red_cube_goals.json
+
+# nodes: drivers, bridges and hardware tests only
+/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/*
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/__init__.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/new_driver_real.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/joint_state_merger.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/joint_state_merger_new.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/ur_joint_states_republisher_left.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/ur_joint_states_republisher_right.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/hand_service_commander_left.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/hand_service_commander_right.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/hand_service_commander_left_low_effort.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/hand_service_commander_right_low_effort.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/home_arms.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/test_hardware_connection.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/test_left_hand.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/test_right_hand.py
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/scripts/thumb_gravity_test.py
+
+# meshes: only what the URDFs reference (sources, Blender files and old versions stay local)
+/src/my_dual_robot_cell/my_dual_robot_cell_control/urdf/meshes/stand/*
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/urdf/meshes/stand/v1_files/
+/src/my_dual_robot_cell/my_dual_robot_cell_control/urdf/meshes/stand/v1_files/*
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/urdf/meshes/stand/v1_files/tshape_stand_v1.dae
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/urdf/meshes/stand/v1_files/tshape_stand_v1.stl
+/src/my_dual_robot_cell/my_dual_robot_cell_control/urdf/meshes/table/*
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/urdf/meshes/table/custom_table.dae
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/urdf/meshes/table/custom_table.stl
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/urdf/meshes/table/oak_veneer_01_diff_4k.jpg
+!/src/my_dual_robot_cell/my_dual_robot_cell_control/urdf/meshes/table/corrugated_iron_02_diff_4k.jpg
+
+# generic
+__pycache__/
+*.pyc
+.vscode/
+build/
+install/
+log/

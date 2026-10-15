@@ -1,0 +1,7 @@
+allegro_hand_interfaces/Trajectory[] trajectory
+float64 max_velocity
+---
+bool status
+---
+sensor_msgs/JointState current_configuration 
+sensor_msgs/JointState desired_current_configuration 

@@ -1,0 +1,76 @@
+# SAH020AL011
+# The YAML file used by the Allegro Hand Node is named "zero.yaml"
+
+hand_info:
+ control_period_s: 0.003
+ DOF: 16
+ # which_hand: 'left'
+ robot_name: 'Allegro Hand'
+ manufacturer: 'SimLab Co. Ltd.'
+ origin: 'Seoul, South Korea'
+ serial: 'SAH020AL011'
+ version: 2.0
+ urdf_file: 'allegroHand_left.urdf'
+ # by default torque and gravity_comp are enabled
+ controllers:
+  - joint_position_PD
+  - joint_position_PID
+
+zero:
+ encoder_offset:
+  j00: 901
+  j01: -67435
+  j02: 253
+  j03: 192
+  j10: 1234
+  j11: -68193
+  j12: 2020
+  j13: 524
+  j20: -129
+  j21: -67231
+  j22: -498
+  j23: 1718
+  j30: -66633
+  j31: -70076
+  j32: -66822
+  j33: -66858
+
+ encoder_direction:
+  j00: +1
+  j01: -1
+  j02: +1
+  j03: +1
+  j10: +1
+  j11: -1
+  j12: +1
+  j13: +1
+  j20: +1
+  j21: -1
+  j22: +1
+  j23: +1
+  j30: -1
+  j31: -1
+  j32: -1
+  j33: -1
+
+ motor_direction:
+  j00: -1
+  j01: -1
+  j02: -1
+  j03: -1
+  j10: -1
+  j11: +1
+  j12: +1
+  j13: -1
+  j20: +1
+  j21: -1
+  j22: -1
+  j23: -1
+  j30: +1
+  j31: +1
+  j32: -1
+  j33: -1
+
+filter_coefs:
+ position: [0.6, 0.198, 0.198]
+ velocity: [0.6, 0.198, 0.198]

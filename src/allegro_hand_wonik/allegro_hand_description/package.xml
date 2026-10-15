@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>allegro_hand_description</name>
+  <version>1.0.0</version>
+  <description>
+    <p>URDF Description package for dressing_robot</p>
+    <p>This package contains configuration data, 3D models and launch files
+        for dressing_robot robot</p>
+  </description>
+
+  <maintainer email="wonikrobotics@gmail.com">Wonikrobotics-git</maintainer>
+  <license>BSD</license>
+  <url type="website">https://www.allegrohand.com/</url>
+  <url type="website">https://github.com/Wonikrobotics-git/</url>
+
+  <author email="jh.bong@wonikrobotics.com">JinHwon Bong</author>
+  <author email="j.y_lee@wonikrobotics.com">JungYeon Lee</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
