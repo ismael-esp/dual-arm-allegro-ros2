@@ -309,3 +309,7 @@ quoted there, so it can be rolled back.
 - PEAK PCAN driver: downloaded from [peak-system.com](https://www.peak-system.com/fileadmin/media/linux/index.php)
   at install time, not redistributed.
 - New files in this repository (Docker setup, scripts, docs): BSD-3-Clause, see `LICENSE`.
+
+---
+
+Developed 2025-2026 by Ismael Espinoza Jaramillo (PhD candidate, Kyung Hee University) in the lab's private workspace and published here as a clean snapshot in Oct 2026 · [ismael-esp.github.io](https://ismael-esp.github.io) · [github.com/ismael-esp](https://github.com/ismael-esp)
